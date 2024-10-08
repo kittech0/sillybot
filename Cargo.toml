@@ -4,3 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+chrono = "0.4.38"
+rand = { version = "0.8.5" }
+rusqlite = { version = "0.32.1", features = ["bundled"] }
+serde = "1.0.210"
+serenity = "0.12.2"
+thiserror = "1.0.64"
+tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }
+toml = "0.8.19"
