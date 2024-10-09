@@ -15,5 +15,3 @@ thiserror = "1.0.64"
 tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }
 toml = "0.8.19"
 simplelog = "0.12.2"
-zstd = "0.13.2"
-tar = "0.4.42"

@@ -6,7 +6,7 @@ use serenity::{
     },
     async_trait, Client,
 };
-use sillybot::read_config;
+use sillybot::read_token;
 
 use crate::{commands, ErrorResult};
 
@@ -14,11 +14,9 @@ pub struct BotHandler;
 
 impl BotHandler {
     pub async fn run() -> ErrorResult {
-        let config = read_config("config.toml").await?;
+        let token = read_token("token").await?;
         let intents = GatewayIntents::all();
-        let mut client = Client::builder(&config.token, intents)
-            .event_handler(Self)
-            .await?;
+        let mut client = Client::builder(&token, intents).event_handler(Self).await?;
         client.start().await?;
         Ok(())
     }

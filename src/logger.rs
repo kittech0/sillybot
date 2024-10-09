@@ -7,8 +7,6 @@ use chrono::{DateTime, Datelike, Local, Timelike};
 use log::LevelFilter;
 use sillybot::ErrorResult;
 use simplelog::{ColorChoice, CombinedLogger, Config, TermLogger, TerminalMode, WriteLogger};
-use tar::{Archive, Builder};
-use zstd::Encoder;
 
 pub struct Logger {
     date_now: DateTime<Local>,
@@ -21,7 +19,7 @@ impl Logger {
         }
     }
 
-    pub fn run(&self) -> ErrorResult {
+    pub fn init(&self) -> ErrorResult {
         fs::create_dir_all("./logs")?;
         CombinedLogger::init(vec![
             TermLogger::new(

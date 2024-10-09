@@ -4,7 +4,7 @@ use chrono::NaiveDate;
 use rand::{rngs::ThreadRng, Rng};
 use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
-use tokio::fs;
+use tokio::fs::{self, File};
 
 const TESTING: bool = true;
 
@@ -25,11 +25,6 @@ pub enum Error {
     #[error("logger creation error")]
     LoggerCreateError(#[from] log::SetLoggerError),
 }
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Config {
-    pub token: String,
-}
 pub struct Book {
     pub rowid: i32,
     pub id: u32,
@@ -38,17 +33,12 @@ pub struct Book {
     pub publish_date: NaiveDate,
 }
 
-pub async fn read_config(path_ref: impl AsRef<Path>) -> ErrorResult<Config> {
+pub async fn read_token(path_ref: impl AsRef<Path>) -> ErrorResult<String> {
     let path = path_ref.as_ref();
     Ok(if !path.is_file() {
-        let config = Config {
-            token: "".to_string(),
-        };
-        let ser = toml::to_string(&config)?;
-        fs::write(path, ser).await?;
-        config
+        File::create(path).await?;
+        "".to_string()
     } else {
-        let de = fs::read_to_string(path).await?;
-        toml::from_str(&de)?
+        fs::read_to_string(path).await?
     })
 }
