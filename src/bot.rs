@@ -2,13 +2,13 @@ use log::{error, warn};
 use serenity::{
     all::{
         Command, Context, CreateInteractionResponse, CreateInteractionResponseMessage,
-        EventHandler, GatewayIntents, Interaction, Message, Ready,
+        EventHandler, GatewayIntents, Interaction, Ready,
     },
     async_trait, Client,
 };
 use sillybot::read_token;
 
-use crate::{ErrorResult};
+use crate::{commands::ping, ErrorResult};
 
 pub struct BotHandler;
 
@@ -24,26 +24,16 @@ impl BotHandler {
 
 #[async_trait]
 impl EventHandler for BotHandler {
-    async fn message(&self, ctx: Context, msg: Message) {
-        match msg.content.as_str() {
-            "!ping" => {
-                if let Err(why) = msg.channel_id.say(&ctx.http, "Pong!").await {
-                    error!("Error sending message: {why:?}");
-                }
-            }
-            _ => return,
-        }
-    }
     async fn ready(&self, ctx: Context, ready: Ready) {
         warn!("Bot running on: {}", ready.user.name);
 
-        let _ = Command::create_global_command(&ctx.http, commands).await;
+        let _ = Command::create_global_command(&ctx.http, ping::register()).await;
     }
 
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         if let Interaction::Command(command) = interaction {
             let content = match command.data.name.as_str() {
-                "ping" => Some(commands::ping::run(&command.data.options())),
+                "ping" => Some(ping::run(&command.data.options())),
                 _ => None,
             };
             if let Some(content) = content {

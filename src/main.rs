@@ -10,7 +10,6 @@ async fn main() -> ErrorResult {
     let logger = Logger::new();
     logger.init()?;
     BotHandler::run().await?;
-    commands::pings::run
     //sql::sql()?;
     Ok(())
 }
