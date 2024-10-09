@@ -8,7 +8,7 @@ use serenity::{
 };
 use sillybot::read_token;
 
-use crate::{commands, ErrorResult};
+use crate::{ErrorResult};
 
 pub struct BotHandler;
 
@@ -37,17 +37,19 @@ impl EventHandler for BotHandler {
     async fn ready(&self, ctx: Context, ready: Ready) {
         warn!("Bot running on: {}", ready.user.name);
 
-        let _ = Command::create_global_command(&ctx.http, commands::register()).await;
+        let _ = Command::create_global_command(&ctx.http, commands).await;
     }
 
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         if let Interaction::Command(command) = interaction {
             let content = match command.data.name.as_str() {
-                "ping" => Some(commands::run(&command.data.options())),
+                "ping" => Some(commands::ping::run(&command.data.options())),
                 _ => None,
             };
             if let Some(content) = content {
-                let data = CreateInteractionResponseMessage::new().content(content);
+                let data = CreateInteractionResponseMessage::new()
+                    .content(content)
+                    .ephemeral(true);
                 let builder = CreateInteractionResponse::Message(data);
                 if let Err(why) = command.create_response(&ctx.http, builder).await {
                     error!("Cannot respond to slash command: {why}");

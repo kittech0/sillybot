@@ -1,9 +1,4 @@
-use std::str::FromStr;
 
-use chrono::NaiveDate;
-use rand::{rngs::ThreadRng, Rng};
-use rusqlite::{params, Connection};
-use sillybot::{Book, ErrorResult};
 
 fn add_book(
     conn: &Connection,

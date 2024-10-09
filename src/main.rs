@@ -1,7 +1,6 @@
 mod bot;
 mod commands;
 mod logger;
-mod sql;
 use bot::BotHandler;
 use logger::Logger;
 use sillybot::ErrorResult;
@@ -11,6 +10,7 @@ async fn main() -> ErrorResult {
     let logger = Logger::new();
     logger.init()?;
     BotHandler::run().await?;
-    sql::sql()?;
+    commands::pings::run
+    //sql::sql()?;
     Ok(())
 }

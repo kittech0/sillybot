@@ -1,27 +1,33 @@
-use std::{
-    fs::{self, File},
-    path::Path,
-};
+use std::fs::{self, File};
 
-use chrono::{DateTime, Datelike, Local, Timelike};
+use chrono::{Datelike, Local, Timelike};
 use log::LevelFilter;
 use sillybot::ErrorResult;
 use simplelog::{ColorChoice, CombinedLogger, Config, TermLogger, TerminalMode, WriteLogger};
 
 pub struct Logger {
-    date_now: DateTime<Local>,
+    file_path: String,
 }
 
 impl Logger {
     pub fn new() -> Self {
+        let date_now = Local::now();
         Self {
-            date_now: Local::now(),
+            file_path: format!(
+                "./logs/{}-{}-{}.{}-{}-{}.log",
+                date_now.year(),
+                date_now.month(),
+                date_now.day(),
+                date_now.hour(),
+                date_now.minute(),
+                date_now.second()
+            ),
         }
     }
 
     pub fn init(&self) -> ErrorResult {
         fs::create_dir_all("./logs")?;
-        CombinedLogger::init(vec![
+        Ok(CombinedLogger::init(vec![
             TermLogger::new(
                 LevelFilter::Warn,
                 Config::default(),
@@ -31,18 +37,9 @@ impl Logger {
             WriteLogger::new(
                 LevelFilter::Trace,
                 Config::default(),
-                File::create(format!(
-                    "./logs/{}-{}-{}.{}-{}-{}.log",
-                    self.date_now.year(),
-                    self.date_now.month(),
-                    self.date_now.day(),
-                    self.date_now.hour(),
-                    self.date_now.minute(),
-                    self.date_now.second()
-                ))?,
+                File::create(&self.file_path)?,
             ),
-        ])?;
-        Ok(())
+        ])?)
     }
 }
 
