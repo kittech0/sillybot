@@ -9,7 +9,7 @@ use sillybot::ErrorResult;
 async fn main() -> ErrorResult {
     let logger = Logger::new();
     logger.init()?;
-    BotHandler::run().await?;
+    BotHandler::new().await.run().await?;
     //sql::sql()?;
     Ok(())
 }
