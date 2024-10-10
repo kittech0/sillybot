@@ -2,8 +2,9 @@ use std::fs::{self, File};
 
 use chrono::{Datelike, Local, Timelike};
 use log::LevelFilter;
-use sillybot::ErrorResult;
 use simplelog::{ColorChoice, CombinedLogger, Config, TermLogger, TerminalMode, WriteLogger};
+
+use super::ErrorResult;
 
 pub struct Logger {
     file_path: String,

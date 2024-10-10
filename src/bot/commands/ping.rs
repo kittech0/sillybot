@@ -3,9 +3,7 @@ use serenity::{
     async_trait,
 };
 
-use super::Command;
-
-pub struct PingCommand;
+use super::{Command, PingCommand};
 
 #[async_trait]
 impl Command for PingCommand {

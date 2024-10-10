@@ -1,15 +1,10 @@
 mod bot;
-mod commands;
-mod logger;
+mod util;
 use bot::BotHandler;
-use logger::Logger;
-use sillybot::ErrorResult;
 
 #[tokio::main]
-async fn main() -> ErrorResult {
-    let logger = Logger::new();
-    logger.init()?;
-    BotHandler::new().await.run().await?;
-    //sql::sql()?;
+async fn main() -> util::ErrorResult {
+    util::logger::Logger::new().init()?;
+    BotHandler::new().run().await?;
     Ok(())
 }

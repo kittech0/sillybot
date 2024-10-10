@@ -6,9 +6,7 @@ use serenity::{
     async_trait,
 };
 
-use super::Command;
-
-pub struct TestInputCommand;
+use super::{Command, TestInputCommand};
 
 #[async_trait]
 impl Command for TestInputCommand {

@@ -11,3 +11,6 @@ pub trait Command: Sync + Send {
     async fn register(&self) -> CreateCommand;
     async fn options(&self) -> CreateInteractionResponseMessage;
 }
+
+pub struct PingCommand;
+pub struct TestInputCommand;

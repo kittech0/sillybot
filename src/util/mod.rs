@@ -1,3 +1,4 @@
+pub mod logger;
 use std::path::Path;
 
 use tokio::fs::{self, File};
@@ -31,6 +32,3 @@ pub async fn read_token(path_ref: impl AsRef<Path>) -> ErrorResult<String> {
         fs::read_to_string(path).await?
     })
 }
-
-
-
