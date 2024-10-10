@@ -1,4 +1,3 @@
-use std::{collections::HashMap, sync::Arc};
 
 use serenity::{
     all::{CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
