@@ -1,4 +1,3 @@
-
 use serenity::{
     all::{CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
     async_trait,

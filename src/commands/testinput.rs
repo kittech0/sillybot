@@ -10,7 +10,6 @@ use super::Command;
 
 pub struct TestInputCommand;
 
-
 #[async_trait]
 impl Command for TestInputCommand {
     async fn run(&self, options: &[ResolvedOption]) -> String {
@@ -27,7 +26,7 @@ impl Command for TestInputCommand {
 
     async fn register(&self) -> CreateCommand {
         CreateCommand::new("testinput")
-            .description("A ping command")
+            .description("A testinput command")
             .add_option(
                 CreateCommandOption::new(CommandOptionType::String, "text", "A text")
                     .required(true),
