@@ -28,3 +28,4 @@ pub async fn read_token(path_ref: impl AsRef<Path>) -> ErrorResult<Option<String
         Some(fs::read_to_string(path).await?)
     })
 }
+

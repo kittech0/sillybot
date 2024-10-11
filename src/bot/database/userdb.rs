@@ -22,7 +22,7 @@ impl User {
                 (),
             )?)
         };
-        db_handler.connection.call(connection_fn).await?;
+        db_handler.0.call(connection_fn).await?;
         Ok(())
     }
 
@@ -36,7 +36,7 @@ impl User {
                 ],
             )?)
         };
-        db_handler.connection.call(connection_fn).await?;
+        db_handler.0.call(connection_fn).await?;
         Ok(())
     }
 }

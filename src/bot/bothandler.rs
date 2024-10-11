@@ -13,10 +13,6 @@ use crate::{
 use super::BotHandler;
 
 impl BotHandler {
-    pub fn new() -> Self {
-        Self {}
-    }
-
     pub async fn run(self) -> ErrorResult {
         let Some(token) = util::read_token("token").await? else {
             log::error!("Undefined token");

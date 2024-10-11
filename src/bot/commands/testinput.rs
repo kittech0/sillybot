@@ -34,7 +34,7 @@ impl CommandRunner for TestInputCommand {
             ..
         }) = options.first()
         else {
-            return "Please provide a valid user".to_string();
+            return "Provide a valid user".to_string();
         };
         let connection = DatabaseHandler::get_connection().await;
         if let Err(error) = database::User::new_table(&connection).await {

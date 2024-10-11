@@ -6,27 +6,20 @@ use simplelog::{ColorChoice, CombinedLogger, Config, TermLogger, TerminalMode, W
 
 use super::ErrorResult;
 
-pub struct Logger {
-    file_path: String,
-}
+pub struct Logger;
 
 impl Logger {
-    pub fn new() -> Self {
+    pub fn init() -> ErrorResult {
         let date_now = Local::now();
-        Self {
-            file_path: format!(
-                "./logs/{}-{}-{}.{}-{}-{}.log",
-                date_now.year(),
-                date_now.month(),
-                date_now.day(),
-                date_now.hour(),
-                date_now.minute(),
-                date_now.second()
-            ),
-        }
-    }
-
-    pub fn init(&self) -> ErrorResult {
+        let file_path = format!(
+            "./logs/{}-{}-{}.{}-{}-{}.log",
+            date_now.year(),
+            date_now.month(),
+            date_now.day(),
+            date_now.hour(),
+            date_now.minute(),
+            date_now.second()
+        );
         fs::create_dir_all("./logs")?;
         Ok(CombinedLogger::init(vec![
             TermLogger::new(
@@ -38,7 +31,7 @@ impl Logger {
             WriteLogger::new(
                 LevelFilter::Trace,
                 Config::default(),
-                File::create(&self.file_path)?,
+                File::create(&file_path)?,
             ),
         ])?)
     }
