@@ -1,12 +1,8 @@
 use std::{collections::HashMap, sync::Arc};
-
 pub mod bothandler;
-mod cmdhandler;
-mod commands;
-pub type CommandMap = HashMap<String, Arc<dyn commands::Command>>;
+pub mod cmdhandler;
+pub mod commands;
+pub mod database;
 
-pub struct CommandHandler(CommandMap);
-
-pub struct BotHandler {
-    commands: CommandHandler,
-}
+pub struct BotHandler;
+pub struct CommandHandler;

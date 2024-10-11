@@ -1,20 +1,18 @@
 use serenity::{
-    all::{
-        Command, CommandInteraction, Context, CreateInteractionResponse, EventHandler,
-        GatewayIntents, Interaction, Ready,
-    },
+    all::{Context, EventHandler, GatewayIntents, Interaction, Ready},
     async_trait, Client,
 };
 
-use crate::util::{self, ErrorResult};
+use crate::{
+    bot::CommandHandler,
+    util::{self, ErrorResult},
+};
 
-use super::{BotHandler, CommandHandler};
+use super::BotHandler;
 
 impl BotHandler {
     pub fn new() -> Self {
-        Self {
-            commands: CommandHandler::new(),
-        }
+        Self {}
     }
 
     pub async fn run(self) -> ErrorResult {
@@ -29,16 +27,17 @@ impl BotHandler {
 impl EventHandler for BotHandler {
     async fn ready(&self, ctx: Context, ready: Ready) {
         log::warn!("Bot running on: {}", ready.user.name);
-        if let Err(error) = self.commands.register_global_commands(ctx).await {
+        if let Err(error) = CommandHandler::register_global_commands(ctx).await {
             log::error!("Unable to register command: {error}")
         }
     }
 
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
-        if let Interaction::Command(command_interaction) = interaction {
-            if let Err(error) = self.commands.run_commands(ctx, command_interaction).await {
-                log::error!("Unable to run command: {error}")
-            }
+        let Interaction::Command(command_interaction) = interaction else {
+            return;
+        };
+        if let Err(error) = CommandHandler::run_command(ctx, command_interaction).await {
+            log::error!("Unable to run command: {error}")
         }
     }
 }

@@ -1,45 +1,35 @@
-use std::sync::Arc;
+use std::{str::FromStr, sync::Arc};
 
 use serenity::all::{Command, CommandInteraction, Context, CreateInteractionResponse};
+use strum::IntoEnumIterator;
 
 use crate::util::ErrorResult;
 
-use super::{commands, CommandHandler, CommandMap};
+use super::{commands, CommandHandler};
 
 impl CommandHandler {
-    pub fn new() -> Self {
-        let mut cmd_map = CommandMap::new();
-        cmd_map.insert("ping".to_string(), Arc::new(commands::PingCommand));
-        cmd_map.insert(
-            "testinput".to_string(),
-            Arc::new(commands::TestInputCommand),
-        );
-        Self(cmd_map)
-    }
-
-    pub async fn register_global_commands(&self, ctx: Context) -> ErrorResult {
-        for (k, v) in &self.0 {
-            Command::create_global_command(&ctx.http, v.register().await).await?;
-            log::warn!("Loading slash command: {k}")
+    pub async fn register_global_commands(ctx: Context) -> ErrorResult {
+        for v in commands::Command::iter() {
+            Command::create_global_command(&ctx.http, v.register()).await?;
+            let name: &'static str = v.into();
+            log::warn!("Loading slash command: {name}")
         }
         Ok(())
     }
 
-    pub async fn run_commands(
-        &self,
-        ctx: Context,
-        command_interaction: CommandInteraction,
-    ) -> ErrorResult {
-        if let Some(content) = self.0.get(&command_interaction.data.name) {
-            let data = content
-                .options()
-                .await
-                .content(content.run(&command_interaction.data.options()).await);
-            let builder = CreateInteractionResponse::Message(data);
-            command_interaction
-                .create_response(&ctx.http, builder)
-                .await?;
-        }
+    pub async fn run_command(ctx: Context, command_interaction: CommandInteraction) -> ErrorResult {
+        let Ok(content) = commands::Command::from_str(&command_interaction.data.name) else {
+            return Ok(());
+        };
+        let data = content.options().content(
+            content
+                .runner()
+                .run(&command_interaction.data.options())
+                .await,
+        );
+        command_interaction
+            .create_response(&ctx.http, CreateInteractionResponse::Message(data))
+            .await?;
         Ok(())
     }
 }

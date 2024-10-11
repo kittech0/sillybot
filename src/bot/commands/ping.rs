@@ -3,19 +3,21 @@ use serenity::{
     async_trait,
 };
 
-use super::{Command, PingCommand};
+use super::{CommandRunner, PingCommand};
 
-#[async_trait]
-impl Command for PingCommand {
-    async fn run(&self, _options: &[ResolvedOption]) -> String {
-        "Hey, I'm alive!".to_string()
-    }
-
-    async fn register(&self) -> CreateCommand {
+impl PingCommand {
+    pub fn register() -> CreateCommand {
         CreateCommand::new("ping").description("A ping command")
     }
 
-    async fn options(&self) -> CreateInteractionResponseMessage {
+    pub fn options() -> CreateInteractionResponseMessage {
         CreateInteractionResponseMessage::new().ephemeral(true)
+    }
+}
+
+#[async_trait]
+impl CommandRunner for PingCommand {
+    async fn run(&self, _options: &[ResolvedOption]) -> String {
+        "Hey, I'm alive!".to_string()
     }
 }

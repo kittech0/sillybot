@@ -43,26 +43,3 @@ impl Logger {
         ])?)
     }
 }
-
-// impl Drop for Logger {
-//     fn drop(&mut self) {
-//         let file_path = format!(
-//             "{}-{}-{}.{}-{}-{}",
-//             self.date_now.year(),
-//             self.date_now.month(),
-//             self.date_now.day(),
-//             self.date_now.hour(),
-//             self.date_now.minute(),
-//             self.date_now.second()
-//         );
-//         let mut log_file = File::open(format!("{file_path}.log")).unwrap();
-//         let zstd_file =
-//             File::create(format!("{file_path}.tar.zst")).expect("Unable to open & create file");
-//         let mut enc = Encoder::new(zstd_file, 9).unwrap();
-//         let mut tar = Builder::new(&mut enc);
-
-//         tar.append_file(format!("{file_path}.log"), &mut log_file)
-//             .unwrap();
-//         tar.finish().unwrap();
-//     }
-// }
