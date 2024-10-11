@@ -1,5 +1,5 @@
 use serenity::{
-    all::{CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
+    all::ResolvedOption,
     async_trait,
 };
 use strum::{EnumIter, EnumString, IntoStaticStr};
