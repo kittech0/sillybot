@@ -1,7 +1,4 @@
-use serenity::{
-    all::ResolvedOption,
-    async_trait,
-};
+use serenity::{all::ResolvedOption, async_trait};
 use strum::{EnumIter, EnumString, IntoStaticStr};
 pub mod cmd;
 pub mod ping;
