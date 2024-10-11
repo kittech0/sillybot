@@ -9,10 +9,6 @@ pub type ErrorResult<T = ()> = std::result::Result<T, Error>;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
-    #[error("toml serialization error")]
-    TomlSer(#[from] toml::ser::Error),
-    #[error("toml deserialization error")]
-    TomlDe(#[from] toml::de::Error),
     #[error("io error")]
     Io(#[from] tokio::io::Error),
     #[error("sql error")]
@@ -23,12 +19,12 @@ pub enum Error {
     LoggerCreate(#[from] log::SetLoggerError),
 }
 
-pub async fn read_token(path_ref: impl AsRef<Path>) -> ErrorResult<String> {
+pub async fn read_token(path_ref: impl AsRef<Path>) -> ErrorResult<Option<String>> {
     let path = path_ref.as_ref();
     Ok(if !path.is_file() {
         File::create(path).await?;
-        "".to_string()
+        None
     } else {
-        fs::read_to_string(path).await?
+        Some(fs::read_to_string(path).await?)
     })
 }

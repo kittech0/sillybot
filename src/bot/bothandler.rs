@@ -1,3 +1,5 @@
+use std::process::exit;
+
 use serenity::{
     all::{Context, EventHandler, GatewayIntents, Interaction, Ready},
     async_trait, Client,
@@ -16,7 +18,10 @@ impl BotHandler {
     }
 
     pub async fn run(self) -> ErrorResult {
-        let token = util::read_token("token").await?;
+        let Some(token) = util::read_token("token").await? else {
+            log::error!("Undefined token");
+            exit(1)
+        };
         let intents = GatewayIntents::all();
         let mut client = Client::builder(&token, intents).event_handler(self).await?;
         Ok(client.start().await?)
