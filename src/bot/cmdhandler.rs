@@ -1,4 +1,4 @@
-use std::{str::FromStr, sync::Arc};
+use std::str::FromStr;
 
 use serenity::all::{Command, CommandInteraction, Context, CreateInteractionResponse};
 use strum::IntoEnumIterator;

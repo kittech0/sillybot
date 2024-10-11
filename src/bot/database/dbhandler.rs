@@ -3,7 +3,6 @@ use std::sync::Arc;
 use tokio::sync::OnceCell;
 use tokio_rusqlite::Connection;
 
-use crate::util::ErrorResult;
 
 use super::DatabaseHandler;
 

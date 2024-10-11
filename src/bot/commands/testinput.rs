@@ -2,12 +2,12 @@ use chrono::NaiveDateTime;
 use serenity::{
     all::{
         CommandOptionType, CreateCommand, CreateCommandOption, CreateInteractionResponseMessage,
-        ResolvedOption, ResolvedValue, User,
+        ResolvedOption, ResolvedValue,
     },
     async_trait,
 };
 
-use crate::bot::database::{self, userdb, DatabaseHandler};
+use crate::bot::database::{self, DatabaseHandler};
 
 use super::{CommandRunner, TestInputCommand};
 

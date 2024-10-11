@@ -1,6 +1,6 @@
 use serenity::{
     all::{
-        CommandOptionType, CreateCommand, CreateCommandOption, CreateInteractionResponseMessage,
+        CreateCommand, CreateInteractionResponseMessage,
         ResolvedOption,
     },
     async_trait,
