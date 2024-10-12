@@ -3,9 +3,10 @@ pub mod userdb;
 use std::sync::Arc;
 
 use chrono::NaiveDateTime;
-use tokio_rusqlite::Connection;
+use rusqlite::Connection;
+use tokio::sync::Mutex;
 
-pub struct DatabaseHandler(Arc<Connection>);
+pub struct DatabaseHandler(Arc<Mutex<Connection>>);
 
 #[derive(Debug)]
 pub struct User {

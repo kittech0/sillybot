@@ -1315,7 +1315,6 @@ dependencies = [
  "strum_macros",
  "thiserror",
  "tokio",
- "tokio-rusqlite",
 ]
 
 [[package]]
@@ -1579,17 +1578,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.79",
-]
-
-[[package]]
-name = "tokio-rusqlite"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b65501378eb676f400c57991f42cbd0986827ab5c5200c53f206d710fb32a945"
-dependencies = [
- "crossbeam-channel",
- "rusqlite",
- "tokio",
 ]
 
 [[package]]

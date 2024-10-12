@@ -15,7 +15,6 @@ thiserror = "1.0.64"
 tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }
 simplelog = "0.12.2"
 strum = { version = "0.26.3", features = ["derive", "strum_macros"] }
-tokio-rusqlite = "0.6.0"
 strum_macros = "0.26.4"
 
 [profile.release]

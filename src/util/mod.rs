@@ -12,7 +12,7 @@ pub enum Error {
     #[error("io error")]
     Io(#[from] tokio::io::Error),
     #[error("sql error")]
-    Sql(#[from] tokio_rusqlite::Error),
+    Sql(#[from] rusqlite::Error),
     #[error("bot error")]
     Serenity(#[from] serenity::Error),
     #[error("logger creation error")]
