@@ -9,19 +9,19 @@ use serenity::{
 
 use crate::bot::database::{self, DatabaseHandler};
 
-use super::{CommandRunner, NewUserCommand};
+use super::{CommandRegister, CommandRunner, NewUserCommand};
 
-impl NewUserCommand {
-    pub fn register() -> CreateCommand {
-        CreateCommand::new("testinput")
-            .description("A testinput command")
+impl CommandRegister for NewUserCommand {
+    fn register(name: &str) -> CreateCommand {
+        CreateCommand::new(name)
+            .description("A newuser command")
             .add_option(
                 CreateCommandOption::new(CommandOptionType::User, "user", "A user test")
                     .required(true),
             )
     }
 
-    pub fn options() -> CreateInteractionResponseMessage {
+    fn options() -> CreateInteractionResponseMessage {
         CreateInteractionResponseMessage::new().ephemeral(true)
     }
 }

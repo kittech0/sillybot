@@ -7,7 +7,7 @@ use super::{DatabaseConnection, DatabaseHandler, User};
 
 impl DatabaseHandler {
     pub async fn get_connection() -> DatabaseConnection {
-        static CONNECTION: OnceCell<Arc<Mutex<Connection>>> = OnceCell::const_new();
+        static CONNECTION: OnceCell<DatabaseConnection> = OnceCell::const_new();
         CONNECTION.get_or_init(Self::init).await.clone()
     }
 

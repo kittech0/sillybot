@@ -1,4 +1,7 @@
-use serenity::{all::ResolvedOption, async_trait};
+use serenity::{
+    all::{CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
+    async_trait,
+};
 use strum::{EnumIter, EnumString, IntoStaticStr};
 pub mod cmd;
 pub mod newuser;
@@ -8,6 +11,12 @@ pub mod ping;
 pub trait CommandRunner: Sync + Send {
     async fn run(&self, options: &[ResolvedOption]) -> String;
 }
+
+pub trait CommandRegister {
+    fn register(name: &str) -> CreateCommand;
+    fn options() -> CreateInteractionResponseMessage;
+}
+
 #[derive(EnumIter, EnumString, IntoStaticStr)]
 pub enum Command {
     #[strum(serialize = "ping")]

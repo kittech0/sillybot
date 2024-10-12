@@ -3,14 +3,14 @@ use serenity::{
     async_trait,
 };
 
-use super::{CommandRunner, PingCommand};
+use super::{CommandRegister, CommandRunner, PingCommand};
 
-impl PingCommand {
-    pub fn register() -> CreateCommand {
-        CreateCommand::new("ping").description("A ping command")
+impl CommandRegister for PingCommand {
+    fn register(name: &str) -> CreateCommand {
+        CreateCommand::new(name).description("A ping command")
     }
 
-    pub fn options() -> CreateInteractionResponseMessage {
+    fn options() -> CreateInteractionResponseMessage {
         CreateInteractionResponseMessage::new().ephemeral(true)
     }
 }

@@ -1,6 +1,6 @@
 use serenity::all::{CreateCommand, CreateInteractionResponseMessage};
 
-use super::{Command, CommandRunner, NewUserCommand, PingCommand};
+use super::{Command, CommandRegister, CommandRunner, NewUserCommand, PingCommand};
 type C = Command;
 
 impl Command {
@@ -12,8 +12,8 @@ impl Command {
     }
     pub fn register(&self) -> CreateCommand {
         match self {
-            C::Ping(_) => PingCommand::register(),
-            C::NewUser(_) => NewUserCommand::register(),
+            C::Ping(_) => PingCommand::register(self.into()),
+            C::NewUser(_) => NewUserCommand::register(self.into()),
         }
     }
     pub fn options(&self) -> CreateInteractionResponseMessage {
