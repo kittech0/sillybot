@@ -1,7 +1,7 @@
 use std::process::exit;
 
 use serenity::{
-    all::{Context, EventHandler, GatewayIntents, Interaction, Ready},
+    all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Ready},
     async_trait, Client,
 };
 
@@ -28,7 +28,8 @@ impl BotHandler {
 impl EventHandler for BotHandler {
     async fn ready(&self, ctx: Context, ready: Ready) {
         log::warn!("Bot running on: {}", ready.user.name);
-        if let Err(error) = CommandHandler::register_global_commands(ctx).await {
+        let guild_id = GuildId::new(1285696315640123553);
+        if let Err(error) = CommandHandler::register_guild_commands(ctx, guild_id).await {
             log::error!("Unable to register command: {error}")
         }
     }
