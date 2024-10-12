@@ -6,7 +6,8 @@ use chrono::NaiveDateTime;
 use rusqlite::Connection;
 use tokio::sync::Mutex;
 
-pub struct DatabaseHandler(Arc<Mutex<Connection>>);
+pub type DatabaseConnection = Arc<Mutex<Connection>>;
+pub struct DatabaseHandler();
 
 #[derive(Debug)]
 pub struct User {

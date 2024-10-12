@@ -3,24 +3,17 @@ use std::sync::Arc;
 use rusqlite::Connection;
 use tokio::sync::{Mutex, OnceCell};
 
-use super::DatabaseHandler;
+use super::{DatabaseConnection, DatabaseHandler, User};
 
 impl DatabaseHandler {
-    pub async fn get_connection() -> Self {
+    pub async fn get_connection() -> DatabaseConnection {
         static CONNECTION: OnceCell<Arc<Mutex<Connection>>> = OnceCell::const_new();
-        DatabaseHandler(
-            CONNECTION
-                .get_or_init(|| async {
-                    Arc::new(Mutex::new(Connection::open_in_memory().unwrap()))
-                })
-                .await
-                .clone(),
-        )
+        CONNECTION.get_or_init(Self::init).await.clone()
     }
-}
 
-impl Clone for DatabaseHandler {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
+    async fn init() -> DatabaseConnection {
+        let db = Arc::new(Mutex::new(Connection::open_in_memory().unwrap()));
+        User::init_table(&db).await.unwrap();
+        db
     }
 }

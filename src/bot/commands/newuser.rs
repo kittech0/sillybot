@@ -9,9 +9,9 @@ use serenity::{
 
 use crate::bot::database::{self, DatabaseHandler};
 
-use super::{CommandRunner, TestInputCommand};
+use super::{CommandRunner, NewUserCommand};
 
-impl TestInputCommand {
+impl NewUserCommand {
     pub fn register() -> CreateCommand {
         CreateCommand::new("testinput")
             .description("A testinput command")
@@ -27,7 +27,7 @@ impl TestInputCommand {
 }
 
 #[async_trait]
-impl CommandRunner for TestInputCommand {
+impl CommandRunner for NewUserCommand {
     async fn run(&self, options: &[ResolvedOption]) -> String {
         let Some(ResolvedOption {
             value: ResolvedValue::User(user, Some(partial)),
@@ -37,16 +37,12 @@ impl CommandRunner for TestInputCommand {
             return "Provide a valid user".to_string();
         };
         let connection = DatabaseHandler::get_connection().await;
-        if let Err(error) = database::User::new_table(&connection).await {
-            log::error!("Error: {error:?}");
-            return "SQL Error".to_string();
-        }
         let Some(joined_at) = partial.joined_at else {
             return "Unknown join date".to_string();
         };
         let join_date = NaiveDateTime::new(joined_at.date_naive(), joined_at.time());
         let user_db = database::User::new(user.id.get(), join_date);
-        if let Err(error) = user_db.insert(&connection).await {
+        if let Err(error) = user_db.insert_or_replace(&connection).await {
             log::error!("Error: {error:?}");
             "SQL Error".to_string()
         } else {
