@@ -1,8 +1,7 @@
 use chrono::NaiveDateTime;
 use serenity::{
     all::{
-        CommandOptionType, CreateCommand, CreateCommandOption, CreateInteractionResponseMessage,
-        ResolvedOption, ResolvedValue,
+        CommandOptionType, Context, CreateCommand, CreateCommandOption, CreateInteractionResponseMessage, ResolvedOption, ResolvedValue
     },
     async_trait,
 };
@@ -21,14 +20,14 @@ impl CommandRegister for NewUserCommand {
             )
     }
 
-    fn options() -> CreateInteractionResponseMessage {
-        CreateInteractionResponseMessage::new().ephemeral(true)
+    fn options(cirm: CreateInteractionResponseMessage) -> CreateInteractionResponseMessage {
+        cirm.ephemeral(true)
     }
 }
 
 #[async_trait]
 impl CommandRunner for NewUserCommand {
-    async fn run(&self, options: &[ResolvedOption]) -> String {
+    async fn run(&self, _ctx: &Context, options: &[ResolvedOption]) -> String {
         let Some(ResolvedOption {
             value: ResolvedValue::User(user, Some(partial)),
             ..

@@ -1,7 +1,7 @@
 use std::process::exit;
 
 use serenity::{
-    all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Ready},
+    all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Ready, Shard},
     async_trait, Client,
 };
 
@@ -20,6 +20,7 @@ impl BotHandler {
         };
         let intents = GatewayIntents::all();
         let mut client = Client::builder(&token, intents).event_handler(self).await?;
+
         Ok(client.start().await?)
     }
 }

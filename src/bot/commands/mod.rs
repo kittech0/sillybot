@@ -1,5 +1,5 @@
 use serenity::{
-    all::{CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
+    all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
     async_trait,
 };
 use strum::{EnumIter, EnumString, IntoStaticStr};
@@ -9,12 +9,12 @@ pub mod ping;
 
 #[async_trait]
 pub trait CommandRunner: Sync + Send {
-    async fn run(&self, options: &[ResolvedOption]) -> String;
+    async fn run(&self, ctx: &Context, options: &[ResolvedOption]) -> String;
 }
 
 pub trait CommandRegister {
     fn register(name: &str) -> CreateCommand;
-    fn options() -> CreateInteractionResponseMessage;
+    fn options(cirm: CreateInteractionResponseMessage) -> CreateInteractionResponseMessage;
 }
 
 #[derive(EnumIter, EnumString, IntoStaticStr)]

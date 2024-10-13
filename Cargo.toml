@@ -9,7 +9,7 @@ log = "0.4.22"
 rand = { version = "0.8.5" }
 rusqlite = { version = "0.32.1", features = ["bundled"] }
 serde = "1.0.210"
-serenity = "0.12.2"
+serenity = { version = "0.12.2", features = ["gateway"] }
 thiserror = "1.0.64"
 tokio = { version = "1.40.0", features = ["full"] }
 simplelog = "0.12.2"

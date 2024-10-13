@@ -1,6 +1,9 @@
+use std::{fmt::format, sync::Arc};
+
 use serenity::{
-    all::{CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
-    async_trait,
+    all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption, ShardManager},
+    async_trait, client,
+    prelude::TypeMapKey,
 };
 
 use super::{CommandRegister, CommandRunner, PingCommand};
@@ -10,14 +13,20 @@ impl CommandRegister for PingCommand {
         CreateCommand::new(name).description("A ping command")
     }
 
-    fn options() -> CreateInteractionResponseMessage {
-        CreateInteractionResponseMessage::new().ephemeral(true)
+    fn options(cirm: CreateInteractionResponseMessage) -> CreateInteractionResponseMessage {
+        cirm.ephemeral(true)
     }
 }
 
+// pub struct ShardManagerContainer;
+
+// impl TypeMapKey for ShardManagerContainer {
+//     type Value = Arc<ShardManager>;
+// }
+
 #[async_trait]
 impl CommandRunner for PingCommand {
-    async fn run(&self, _options: &[ResolvedOption]) -> String {
-        "Hey, I'm alive!".to_string()
+    async fn run(&self, _ctx: &Context, _options: &[ResolvedOption]) -> String {
+        format!("PING {:?}", 0)
     }
 }

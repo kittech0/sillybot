@@ -16,10 +16,13 @@ impl Command {
             C::NewUser(_) => NewUserCommand::register(self.into()),
         }
     }
-    pub fn options(&self) -> CreateInteractionResponseMessage {
+    pub fn options(
+        &self,
+        cirm: CreateInteractionResponseMessage,
+    ) -> CreateInteractionResponseMessage {
         match self {
-            C::Ping(_) => PingCommand::options(),
-            C::NewUser(_) => NewUserCommand::options(),
+            C::Ping(_) => PingCommand::options(cirm),
+            C::NewUser(_) => NewUserCommand::options(cirm),
         }
     }
 }

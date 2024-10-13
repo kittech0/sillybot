@@ -1,7 +1,8 @@
 use std::str::FromStr;
 
 use serenity::all::{
-    Command, CommandInteraction, Context, CreateInteractionResponse, GuildId,
+    Command, CommandInteraction, Context, CreateInteractionResponse,
+    CreateInteractionResponseMessage, GuildId,
 };
 use strum::IntoEnumIterator;
 
@@ -20,8 +21,12 @@ impl CommandHandler {
     }
 
     pub async fn register_guild_commands(ctx: Context, guild_id: GuildId) -> ErrorResult {
-        let commands = commands::Command::iter().map(|x| x.register()).collect();
-        guild_id.set_commands(&ctx.http, commands).await?;
+        guild_id
+            .set_commands(
+                &ctx.http,
+                commands::Command::iter().map(|x| x.register()).collect(),
+            )
+            .await?;
         for command in commands::Command::iter() {
             let name: &'static str = command.into();
             log::warn!("Loaded guild ({guild_id}) slash command: {name}");
@@ -33,14 +38,17 @@ impl CommandHandler {
         let Ok(content) = commands::Command::from_str(&command_interaction.data.name) else {
             return Ok(());
         };
-        let data = content.options().content(
+        let data = CreateInteractionResponseMessage::new().content(
             content
                 .runner()
-                .run(&command_interaction.data.options())
+                .run(&ctx,&command_interaction.data.options())
                 .await,
         );
         command_interaction
-            .create_response(&ctx.http, CreateInteractionResponse::Message(data))
+            .create_response(
+                &ctx.http,
+                CreateInteractionResponse::Message(content.options(data)),
+            )
             .await?;
         Ok(())
     }
