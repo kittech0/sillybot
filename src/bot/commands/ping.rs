@@ -1,9 +1,7 @@
-use std::{fmt::format, sync::Arc};
 
 use serenity::{
-    all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption, ShardManager},
-    async_trait, client,
-    prelude::TypeMapKey,
+    all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
+    async_trait,
 };
 
 use super::{CommandRegister, CommandRunner, PingCommand};

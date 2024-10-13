@@ -1,7 +1,7 @@
 use std::process::exit;
 
 use serenity::{
-    all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Ready, Shard},
+    all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Ready},
     async_trait, Client,
 };
 
