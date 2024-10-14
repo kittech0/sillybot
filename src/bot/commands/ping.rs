@@ -1,30 +1,12 @@
+use serenity::all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption};
 
-use serenity::{
-    all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
-    async_trait,
-};
-
-use super::{CommandRegister, CommandRunner, PingCommand};
-
-impl CommandRegister for PingCommand {
-    fn register(name: &str) -> CreateCommand {
-        CreateCommand::new(name).description("A ping command")
-    }
-
-    fn options(cirm: CreateInteractionResponseMessage) -> CreateInteractionResponseMessage {
-        cirm.ephemeral(true)
-    }
+pub fn register(name: &str) -> CreateCommand {
+    CreateCommand::new(name).description("A ping command")
 }
 
-// pub struct ShardManagerContainer;
-
-// impl TypeMapKey for ShardManagerContainer {
-//     type Value = Arc<ShardManager>;
-// }
-
-#[async_trait]
-impl CommandRunner for PingCommand {
-    async fn run(&self, _ctx: &Context, _options: &[ResolvedOption]) -> String {
-        format!("PING {:?}", 0)
-    }
+pub fn options(cirm: CreateInteractionResponseMessage) -> CreateInteractionResponseMessage {
+    cirm.ephemeral(true)
+}
+pub async fn run(_ctx: &Context, _options: &[ResolvedOption<'_>]) -> String {
+    format!("PING {:?}", 0)
 }

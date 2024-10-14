@@ -7,25 +7,12 @@ pub mod cmd;
 pub mod newuser;
 pub mod ping;
 
-#[async_trait]
-pub trait CommandRunner: Sync + Send {
-    async fn run(&self, ctx: &Context, options: &[ResolvedOption]) -> String;
-}
 
-pub trait CommandRegister {
-    fn register(name: &str) -> CreateCommand;
-    fn options(cirm: CreateInteractionResponseMessage) -> CreateInteractionResponseMessage;
-}
 
 #[derive(EnumIter, EnumString, IntoStaticStr)]
 pub enum Command {
     #[strum(serialize = "ping")]
-    Ping(PingCommand),
+    Ping,
     #[strum(serialize = "newuser")]
-    NewUser(NewUserCommand),
+    NewUser,
 }
-
-#[derive(Default)]
-pub struct PingCommand;
-#[derive(Default)]
-pub struct NewUserCommand;

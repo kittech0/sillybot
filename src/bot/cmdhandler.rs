@@ -38,12 +38,8 @@ impl CommandHandler {
         let Ok(content) = commands::Command::from_str(&command_interaction.data.name) else {
             return Ok(());
         };
-        let data = CreateInteractionResponseMessage::new().content(
-            content
-                .runner()
-                .run(&ctx,&command_interaction.data.options())
-                .await,
-        );
+        let data = CreateInteractionResponseMessage::new()
+            .content(content.run(&ctx, &command_interaction.data.options()).await);
         command_interaction
             .create_response(
                 &ctx.http,

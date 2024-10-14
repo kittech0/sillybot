@@ -1,3 +1,5 @@
+#![feature(type_alias_impl_trait)]
+
 mod bot;
 mod util;
 use bot::{database::DatabaseHandler, BotHandler};

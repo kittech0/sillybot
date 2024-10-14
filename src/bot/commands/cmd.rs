@@ -1,19 +1,22 @@
-use serenity::all::{CreateCommand, CreateInteractionResponseMessage};
+use std::{future::Future, pin::Pin};
 
-use super::{Command, CommandRegister, CommandRunner, NewUserCommand, PingCommand};
+use serenity::all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption};
+
+use super::{newuser, ping, Command};
 type C = Command;
 
-impl Command {
-    pub fn runner(&self) -> &dyn CommandRunner {
+impl C {
+    pub async fn run(&self, ctx: &Context, options: &[ResolvedOption<'_>]) -> String {
         match self {
-            C::Ping(c, ..) => c,
-            C::NewUser(c, ..) => c,
+            C::Ping => ping::run(ctx, options).await,
+            C::NewUser => newuser::run(ctx, options).await,
         }
     }
+
     pub fn register(&self) -> CreateCommand {
         match self {
-            C::Ping(_) => PingCommand::register(self.into()),
-            C::NewUser(_) => NewUserCommand::register(self.into()),
+            C::Ping => ping::register(self.into()),
+            C::NewUser => newuser::register(self.into()),
         }
     }
     pub fn options(
@@ -21,8 +24,8 @@ impl Command {
         cirm: CreateInteractionResponseMessage,
     ) -> CreateInteractionResponseMessage {
         match self {
-            C::Ping(_) => PingCommand::options(cirm),
-            C::NewUser(_) => NewUserCommand::options(cirm),
+            C::Ping => ping::options(cirm),
+            C::NewUser => newuser::options(cirm),
         }
     }
 }
