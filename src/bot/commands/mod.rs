@@ -3,8 +3,6 @@ pub mod cmd;
 pub mod newuser;
 pub mod ping;
 
-
-
 #[derive(EnumIter, EnumString, IntoStaticStr)]
 pub enum Command {
     #[strum(serialize = "ping")]

@@ -1,4 +1,3 @@
-
 use serenity::all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption};
 
 use super::{newuser, ping, Command};
