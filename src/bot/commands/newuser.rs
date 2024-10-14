@@ -1,11 +1,8 @@
 use chrono::NaiveDateTime;
-use serenity::{
-    all::{
+use serenity::all::{
         CommandOptionType, Context, CreateCommand, CreateCommandOption,
         CreateInteractionResponseMessage, ResolvedOption, ResolvedValue,
-    },
-    async_trait,
-};
+    };
 
 use crate::bot::database::{self, DatabaseHandler};
 

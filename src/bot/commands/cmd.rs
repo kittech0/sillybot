@@ -1,4 +1,3 @@
-use std::{future::Future, pin::Pin};
 
 use serenity::all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption};
 

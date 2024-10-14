@@ -1,7 +1,3 @@
-use serenity::{
-    all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption},
-    async_trait,
-};
 use strum::{EnumIter, EnumString, IntoStaticStr};
 pub mod cmd;
 pub mod newuser;
