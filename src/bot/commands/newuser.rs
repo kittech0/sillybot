@@ -1,14 +1,11 @@
-use core::error;
-use std::str::FromStr;
-
 use chrono::NaiveDateTime;
 use serenity::all::{
     Colour, CommandOptionType, Context, CreateCommand, CreateCommandOption, CreateEmbed,
-    CreateInteractionResponseMessage, PartialMember, ResolvedOption, ResolvedValue, User, UserId,
+    CreateInteractionResponseMessage, ResolvedOption, ResolvedValue,
 };
 use tabled::Table;
 
-use crate::bot::database::{self, data, DatabaseHandler, UserRepository};
+use crate::bot::database::{data, UserRepository};
 
 pub fn register(name: &str) -> CreateCommand {
     CreateCommand::new(name)

@@ -1,7 +1,3 @@
-
-
-use std::fmt::Display;
-
 use super::User;
 use chrono::NaiveDateTime;
 
@@ -13,4 +9,3 @@ impl User {
         }
     }
 }
-

@@ -1,7 +1,5 @@
-use std::str::FromStr;
-
 use chrono::NaiveDateTime;
-use rusqlite::{params, Connection};
+use rusqlite::params;
 
 use crate::util::ErrorResult;
 

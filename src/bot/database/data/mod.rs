@@ -1,5 +1,4 @@
 use chrono::NaiveDateTime;
-use strum::Display;
 use tabled::Tabled;
 
 pub mod user;

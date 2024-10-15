@@ -1,7 +1,4 @@
-use std::{
-    fmt::format,
-    process::{self, exit},
-};
+use std::process::exit;
 
 use serenity::{
     all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Ready},
