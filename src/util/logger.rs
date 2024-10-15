@@ -4,9 +4,8 @@ use chrono::{Datelike, Local, Timelike};
 use log::LevelFilter;
 use simplelog::{ColorChoice, CombinedLogger, Config, TermLogger, TerminalMode, WriteLogger};
 
-use super::ErrorResult;
+use super::{ErrorResult, Logger};
 
-pub struct Logger;
 
 impl Logger {
     pub fn init() -> ErrorResult {

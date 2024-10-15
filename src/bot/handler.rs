@@ -1,4 +1,3 @@
-
 use serenity::{
     all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Ready},
     async_trait, Client,
@@ -6,14 +5,14 @@ use serenity::{
 
 use crate::{
     bot::CommandHandler,
-    util::{self, throw_error, ErrorResult},
+    util::{funcs::{read_token, throw_error}, ErrorResult},
 };
 
 use super::BotHandler;
 
 impl BotHandler {
     pub async fn run(self) -> ErrorResult {
-        let Some(token) = util::read_token("token").await? else {
+        let Some(token) = read_token("token").await? else {
             throw_error("Undefined token")
         };
         let intents = GatewayIntents::all();
