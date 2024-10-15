@@ -1,9 +1,27 @@
 use serenity::all::{
-    Context, CreateCommand, CreateEmbed, CreateInteractionResponseMessage, ResolvedOption,
+    CommandOptionType, Context, CreateCommand, CreateCommandOption, CreateEmbed,
+    CreateInteractionResponseMessage, ResolvedOption,
 };
 
 pub fn register(name: &str) -> CreateCommand {
-    CreateCommand::new(name).description("A ping command")
+    CreateCommand::new(name)
+        .add_option(
+            CreateCommandOption::new(CommandOptionType::SubCommandGroup, "test", "test")
+                .add_sub_option(CreateCommandOption::new(
+                    CommandOptionType::SubCommand,
+                    "lol",
+                    "silly",
+                )),
+        )
+        .add_option(
+            CreateCommandOption::new(CommandOptionType::SubCommandGroup, "test2", "test")
+                .add_sub_option(CreateCommandOption::new(
+                    CommandOptionType::SubCommand,
+                    "lol2",
+                    "silly",
+                )),
+        )
+        .description("A ping command")
 }
 
 pub async fn run(

@@ -11,7 +11,7 @@ use crate::util::ErrorResult;
 use super::{commands, CommandHandler};
 
 impl CommandHandler {
-    pub async fn _register_global_commands(ctx: Context) -> ErrorResult {
+    pub async fn _register_global_commands(&self, ctx: Context) -> ErrorResult {
         for v in commands::Command::iter() {
             Command::create_global_command(&ctx.http, v.register()).await?;
             let name: &'static str = v.into();
@@ -20,7 +20,7 @@ impl CommandHandler {
         Ok(())
     }
 
-    pub async fn register_guild_commands(ctx: Context, guild_id: GuildId) -> ErrorResult {
+    pub async fn register_guild_commands(&self, ctx: Context, guild_id: GuildId) -> ErrorResult {
         guild_id
             .set_commands(
                 &ctx.http,
@@ -34,7 +34,11 @@ impl CommandHandler {
         Ok(())
     }
 
-    pub async fn run_command(ctx: Context, command_interaction: CommandInteraction) -> ErrorResult {
+    pub async fn run_command(
+        &self,
+        ctx: Context,
+        command_interaction: CommandInteraction,
+    ) -> ErrorResult {
         let Ok(content) = commands::Command::from_str(&command_interaction.data.name) else {
             return Ok(());
         };

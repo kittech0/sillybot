@@ -1,5 +1,5 @@
 pub mod logger;
-use std::path::Path;
+use std::{fmt::Display, path::Path, process::exit};
 
 use tokio::fs::{self, File};
 
@@ -27,4 +27,9 @@ pub async fn read_token(path_ref: impl AsRef<Path>) -> ErrorResult<Option<String
     } else {
         Some(fs::read_to_string(path).await?)
     })
+}
+
+pub fn throw_error(message: impl Display) -> ! {
+    log::error!("{message}");
+    exit(1)
 }

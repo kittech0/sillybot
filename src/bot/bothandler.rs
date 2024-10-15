@@ -1,4 +1,7 @@
-use std::process::exit;
+use std::{
+    fmt::format,
+    process::{self, exit},
+};
 
 use serenity::{
     all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Ready},
@@ -7,7 +10,7 @@ use serenity::{
 
 use crate::{
     bot::CommandHandler,
-    util::{self, ErrorResult},
+    util::{self, throw_error, ErrorResult},
 };
 
 use super::BotHandler;
@@ -30,8 +33,8 @@ impl EventHandler for BotHandler {
     async fn ready(&self, ctx: Context, ready: Ready) {
         log::warn!("Bot running on: {}", ready.user.name);
         let guild_id = GuildId::new(1285696315640123553);
-        if let Err(error) = CommandHandler::register_guild_commands(ctx, guild_id).await {
-            log::error!("Unable to register command: {error}")
+        if let Err(error) = CommandHandler.register_guild_commands(ctx, guild_id).await {
+            throw_error(format!("Unable to register command: {error:?}"));
         }
     }
 
@@ -39,8 +42,8 @@ impl EventHandler for BotHandler {
         let Interaction::Command(command_interaction) = interaction else {
             return;
         };
-        if let Err(error) = CommandHandler::run_command(ctx, command_interaction).await {
-            log::error!("Unable to run command: {error}")
+        if let Err(error) = CommandHandler.run_command(ctx, command_interaction).await {
+            log::error!("Unable to run command: {error:?}")
         }
     }
 }
