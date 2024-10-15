@@ -78,7 +78,7 @@ pub async fn replace(
 }
 
 pub async fn list(
-    ctx: &Context,
+    _ctx: &Context,
     _options: &[ResolvedOption<'_>],
     cirm: CreateInteractionResponseMessage,
 ) -> CreateInteractionResponseMessage {
