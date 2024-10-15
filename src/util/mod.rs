@@ -16,4 +16,3 @@ pub enum Error {
     #[error("logger creation error")]
     LoggerCreate(#[from] log::SetLoggerError),
 }
-pub struct Logger;

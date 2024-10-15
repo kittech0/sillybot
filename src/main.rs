@@ -3,11 +3,11 @@
 mod bot;
 mod util;
 use bot::{database::DatabaseHandler, BotHandler};
-use util::Logger;
+use util::logger;
 
 #[tokio::main]
 async fn main() -> util::ErrorResult {
-    Logger::init()?;
+    logger::init()?;
     let _ = DatabaseHandler::get_connection().await;
     BotHandler.run().await?;
     Ok(())
