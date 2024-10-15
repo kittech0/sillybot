@@ -6,13 +6,13 @@ use serenity::all::{
 };
 use strum::IntoEnumIterator;
 
-use crate::util::ErrorResult;
+use crate::{bot::CommandHandler, util::ErrorResult};
 
-use super::{commands, CommandHandler};
+use super::CommandStore;
 
 impl CommandHandler {
     pub async fn _register_global_commands(&self, ctx: Context) -> ErrorResult {
-        for v in commands::Command::iter() {
+        for v in CommandStore::iter() {
             Command::create_global_command(&ctx.http, v.register()).await?;
             let name: &'static str = v.into();
             log::warn!("Loaded global slash command: {name}")
@@ -24,10 +24,10 @@ impl CommandHandler {
         guild_id
             .set_commands(
                 &ctx.http,
-                commands::Command::iter().map(|x| x.register()).collect(),
+                CommandStore::iter().map(|x| x.register()).collect(),
             )
             .await?;
-        for command in commands::Command::iter() {
+        for command in CommandStore::iter() {
             let name: &'static str = command.into();
             log::warn!("Loaded guild ({guild_id}) slash command: {name}");
         }
@@ -39,7 +39,7 @@ impl CommandHandler {
         ctx: Context,
         command_interaction: CommandInteraction,
     ) -> ErrorResult {
-        let Ok(content) = commands::Command::from_str(&command_interaction.data.name) else {
+        let Ok(content) = CommandStore::from_str(&command_interaction.data.name) else {
             return Ok(());
         };
         let data = CreateInteractionResponseMessage::new();

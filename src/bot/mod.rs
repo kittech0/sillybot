@@ -1,5 +1,4 @@
-pub mod bothandler;
-pub mod cmdhandler;
+pub mod handler;
 pub mod commands;
 pub mod database;
 

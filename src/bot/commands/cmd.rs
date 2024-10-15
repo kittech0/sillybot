@@ -1,9 +1,9 @@
 use serenity::all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption};
 
-use super::{newuser, ping, Command};
-type C = Command;
+use super::{newuser, ping, CommandStore};
+type C = CommandStore;
 
-impl C {
+impl CommandStore {
     pub async fn run(
         &self,
         ctx: &Context,
