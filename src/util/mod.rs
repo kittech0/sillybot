@@ -15,4 +15,7 @@ pub enum Error {
     Serenity(#[from] serenity::Error),
     #[error("logger creation error")]
     LoggerCreate(#[from] log::SetLoggerError),
+    #[error("undefined token")]
+    UndefinedToken,
 }
+

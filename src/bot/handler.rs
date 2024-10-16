@@ -5,16 +5,14 @@ use serenity::{
 
 use crate::{
     bot::CommandHandler,
-    util::{funcs::{read_token, throw_error}, ErrorResult},
+    util::{funcs, Error, ErrorResult},
 };
 
 use super::BotHandler;
 
 impl BotHandler {
     pub async fn run(self) -> ErrorResult {
-        let Some(token) = read_token("token").await? else {
-            throw_error("Undefined token")
-        };
+        let token = funcs::read_token("token")?.ok_or(Error::UndefinedToken)?;
         let intents = GatewayIntents::all();
         let mut client = Client::builder(&token, intents).event_handler(self).await?;
 
@@ -28,7 +26,7 @@ impl EventHandler for BotHandler {
         log::warn!("Bot running on: {}", ready.user.name);
         let guild_id = GuildId::new(1285696315640123553);
         if let Err(error) = CommandHandler.register_guild_commands(ctx, guild_id).await {
-            throw_error(format!("Unable to register command: {error:?}"));
+            funcs::throw_error(format!("Unable to register command: {error:?}"));
         }
     }
 

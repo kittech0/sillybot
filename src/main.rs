@@ -4,6 +4,7 @@ mod bot;
 mod util;
 use bot::{database::DatabaseHandler, BotHandler};
 use util::logger;
+pub use tokio::fs as tfs;
 
 #[tokio::main]
 async fn main() -> util::ErrorResult {

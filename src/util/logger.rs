@@ -1,4 +1,4 @@
-use std::fs::{self, File};
+use std::fs;
 
 use chrono::{Datelike, Local, Timelike};
 use log::LevelFilter;
@@ -28,7 +28,7 @@ pub fn init() -> ErrorResult {
         WriteLogger::new(
             LevelFilter::Trace,
             Config::default(),
-            File::create(&file_path)?,
+            fs::File::create(&file_path)?,
         ),
     ])?)
 }
