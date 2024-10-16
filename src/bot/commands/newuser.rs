@@ -70,8 +70,8 @@ pub async fn replace(
     let user_data = data::User::new(user.id.get(), join_date);
 
     if let Err(error) = repository.replace(user_data).await {
-        log::error!("Error: {error:?}");
-        error_msg(cirm, "SQL Error")
+        log::error!("error: {error:?}");
+        error_msg(cirm, "SQL error")
     } else {
         completed_msg(cirm, format!("Insert or replace user: {}", user.name))
     }
@@ -86,7 +86,7 @@ pub async fn list(
     let users = repository.get_all().await;
 
     let Ok(users) = users else {
-        log::error!("Error: {:?}", users.err().unwrap());
+        log::error!("error: {:?}", users);
         return error_msg(cirm, "SQL Error");
     };
     cirm.content(format!("```\n{}\n```", Table::new(&users)))

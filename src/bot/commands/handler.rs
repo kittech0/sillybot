@@ -29,7 +29,7 @@ impl CommandHandler {
             .await?;
         for command in CommandStore::iter() {
             let name: &'static str = command.into();
-            log::warn!("Loaded guild ({guild_id}) slash command: {name}");
+            log::warn!("loaded guild ({guild_id}) slash command: {name}");
         }
         Ok(())
     }

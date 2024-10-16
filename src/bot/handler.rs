@@ -23,10 +23,10 @@ impl BotHandler {
 #[async_trait]
 impl EventHandler for BotHandler {
     async fn ready(&self, ctx: Context, ready: Ready) {
-        log::warn!("Bot running on: {}", ready.user.name);
+        log::warn!("bot running on: {}", ready.user.name);
         let guild_id = GuildId::new(1285696315640123553);
         if let Err(error) = CommandHandler.register_guild_commands(ctx, guild_id).await {
-            funcs::throw_error(format!("Unable to register command: {error:?}"));
+            funcs::throw("unable to register command", error);
         }
     }
 
@@ -35,7 +35,7 @@ impl EventHandler for BotHandler {
             return;
         };
         if let Err(error) = CommandHandler.run_command(ctx, command_interaction).await {
-            log::error!("Unable to run command: {error:?}")
+            funcs::throw("unable to run command", error);
         }
     }
 }

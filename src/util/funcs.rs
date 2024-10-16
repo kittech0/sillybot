@@ -1,5 +1,9 @@
-use std::{fmt::Display, fs, path::Path, process::exit};
-
+use std::{
+    fmt::{Debug, Display},
+    fs,
+    path::Path,
+    process::exit,
+};
 
 use super::ErrorResult;
 
@@ -13,7 +17,7 @@ pub fn read_token(path_ref: impl AsRef<Path>) -> ErrorResult<Option<String>> {
     })
 }
 
-pub fn throw_error(message: impl Display) -> ! {
-    log::error!("{message}");
+pub fn throw(message: impl Display, error: impl Debug) -> ! {
+    log::error!("{message}: {error:?}");
     exit(1)
 }
