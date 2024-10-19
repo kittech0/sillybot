@@ -19,7 +19,3 @@ tabled = "0.16.0"
 strip = true
 opt-level = 3
 lto = true
-
-[unstable]
-mtime-on-use = true
-build-std = ["core", "alloc", "std", "proc_macro"]
