@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
-use serenity::all::{Context, CreateCommand, CreateInteractionResponseMessage, ResolvedOption};
+use serenity::all::{Context, CreateInteractionResponseMessage, ResolvedOption};
 
-use super::{newuser, ping, Command, CommandRegistry};
+use super::{Command, CommandRegistry};
 
 impl CommandRegistry {
     pub fn new() -> Self {

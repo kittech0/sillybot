@@ -1,8 +1,6 @@
-use std::{collections::HashMap, str::FromStr};
-
 use serenity::all::{
-    Command, CommandInteraction, Context, CreateInteractionResponse,
-    CreateInteractionResponseMessage, GuildId,
+    CommandInteraction, Context, CreateInteractionResponse, CreateInteractionResponseMessage,
+    GuildId,
 };
 
 use crate::{bot::CommandHandler, database::DatabaseConnection, util::ErrorResult};
@@ -47,15 +45,19 @@ impl CommandHandler {
         ctx: Context,
         command_interaction: CommandInteraction,
     ) -> ErrorResult {
-        let registry = &self.registry.0;
-
-        let Some(content) = registry.get(&command_interaction.data.name) else {
+        let registry = &self.registry;
+        let data = CreateInteractionResponseMessage::new();
+        let Some(data) = registry
+            .run(
+                &command_interaction.data.name,
+                &ctx,
+                &command_interaction.data.options(),
+                data,
+            )
+            .await
+        else {
             return Ok(());
         };
-        let data = CreateInteractionResponseMessage::new();
-        let data = content
-            .run(&ctx, &command_interaction.data.options(), data)
-            .await;
         command_interaction
             .create_response(&ctx.http, CreateInteractionResponse::Message(data))
             .await?;

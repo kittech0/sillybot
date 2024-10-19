@@ -1,8 +1,7 @@
-use chrono::NaiveDateTime;
 use serenity::{
     all::{
-        Colour, CommandOptionType, Context, CreateCommand, CreateCommandOption, CreateEmbed,
-        CreateInteractionResponseMessage, ResolvedOption, ResolvedValue, User, UserId,
+        CommandOptionType, Context, CreateCommand, CreateCommandOption,
+        CreateInteractionResponseMessage, ResolvedOption, ResolvedValue,
     },
     async_trait,
 };
