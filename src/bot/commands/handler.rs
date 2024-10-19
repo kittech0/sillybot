@@ -30,7 +30,7 @@ impl CommandHandler {
                 &ctx.http,
                 registry
                     .iter()
-                    .map(|(name, cmd)| cmd.register(&name))
+                    .map(|(name, cmd)| cmd.register(name))
                     .collect(),
             )
             .await?;
