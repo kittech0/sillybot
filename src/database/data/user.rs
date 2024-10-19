@@ -1,6 +1,6 @@
 use std::{fmt::Display, str::FromStr};
 
-use super::{DiscordId, JoinDate, User};
+use super::{DiscordId, JoinDate, SqlData, User};
 use chrono::{NaiveDateTime, ParseError};
 use rusqlite::Row;
 use serenity::all::{Timestamp, UserId};
@@ -14,15 +14,15 @@ impl User {
     }
 }
 
-impl DiscordId {
-    pub fn get_sql_field() -> String {
-        "discord_id BIGINT UNSIGNED UNIQUE NOT NULL".to_string()
+impl SqlData for DiscordId {
+    fn get_sql_type() -> impl AsRef<str> {
+        "BIGINT UNSIGNED UNIQUE NOT NULL"
     }
 }
 
-impl JoinDate {
-    pub fn get_sql_field() -> String {
-        "join_date DATETIME NOT NULL".to_string()
+impl SqlData for JoinDate {
+    fn get_sql_type() -> impl AsRef<str> {
+        "DATETIME NOT NULL"
     }
 }
 

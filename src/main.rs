@@ -3,14 +3,14 @@ mod bot;
 mod database;
 mod util;
 use bot::BotHandler;
-use database::{repository::UserRepository, DatabaseHandler};
+use database::{repository::UserRepository, DatabaseConnection};
 use util::logger;
 
 #[tokio::main]
 async fn main() -> util::ErrorResult {
-    let db = DatabaseHandler::new(Option::None)?;
-    UserRepository::init(&db.get_connection()).await?;
+    let db = DatabaseConnection::new(Option::None)?;
+    UserRepository::init(db.clone()).await?;
     logger::init()?;
-    BotHandler::new(db.get_connection()).run().await?;
+    BotHandler::new(db).run().await?;
     Ok(())
 }

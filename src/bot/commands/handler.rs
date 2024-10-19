@@ -9,10 +9,10 @@ use super::{CommandRegistry, NewUserCmd, PingCmd};
 
 impl CommandHandler {
     pub fn new(db_conn: DatabaseConnection) -> Self {
-        let mut registry = CommandRegistry::new();
-        registry.add("newuser", Box::new(NewUserCmd::new(db_conn.clone())));
-        registry.add("ping", Box::new(PingCmd {}));
-
+        let registry = CommandRegistry::new([
+            ("newuser".into(), Box::new(NewUserCmd::new(db_conn.clone()))),
+            ("ping".into(), Box::new(PingCmd {})),
+        ]);
         Self { registry }
     }
     // pub async fn _register_global_commands(&self, ctx: Context) -> ErrorResult {

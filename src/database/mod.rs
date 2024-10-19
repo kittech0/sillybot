@@ -1,12 +1,8 @@
 pub mod data;
-pub mod handler;
+pub mod connection;
 pub mod repository;
 use rusqlite::Connection;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-pub type DatabaseConnection = Arc<Mutex<Connection>>;
-
-pub struct DatabaseHandler {
-    connection: DatabaseConnection,
-}
+pub struct DatabaseConnection(pub Arc<Mutex<Connection>>);

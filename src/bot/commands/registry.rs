@@ -5,11 +5,8 @@ use serenity::all::{Context, CreateInteractionResponseMessage, ResolvedOption};
 use super::{Command, CommandRegistry};
 
 impl CommandRegistry {
-    pub fn new() -> Self {
-        Self(HashMap::new())
-    }
-    pub fn add(&mut self, name: impl Into<String>, command: Box<dyn Command>) {
-        self.0.insert(name.into(), command);
+    pub fn new<const T: usize>(values: [(String, Box<dyn Command>); T]) -> Self {
+        Self(HashMap::from(values))
     }
     pub async fn run(
         &self,

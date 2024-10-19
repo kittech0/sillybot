@@ -12,3 +12,6 @@ pub struct User {
 pub struct DiscordId(u64);
 #[derive(Debug, Tabled)]
 pub struct JoinDate(NaiveDateTime);
+pub trait SqlData {
+    fn get_sql_type() -> impl AsRef<str>;
+}
