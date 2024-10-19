@@ -6,6 +6,7 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 
 pub type DatabaseConnection = Arc<Mutex<Connection>>;
-pub struct DatabaseHandler;
 
-pub struct UserRepository(DatabaseConnection);
+pub struct DatabaseHandler {
+    connection: DatabaseConnection,
+}

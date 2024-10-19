@@ -1,34 +1,42 @@
-use std::str::FromStr;
+use std::{collections::HashMap, str::FromStr};
 
 use serenity::all::{
     Command, CommandInteraction, Context, CreateInteractionResponse,
     CreateInteractionResponseMessage, GuildId,
 };
-use strum::IntoEnumIterator;
 
-use crate::{bot::CommandHandler, util::ErrorResult};
+use crate::{bot::CommandHandler, database::DatabaseConnection, util::ErrorResult};
 
-use super::CommandStore;
+use super::{CommandRegistry, NewUserCmd, PingCmd};
 
 impl CommandHandler {
-    pub async fn _register_global_commands(&self, ctx: Context) -> ErrorResult {
-        for v in CommandStore::iter() {
-            Command::create_global_command(&ctx.http, v.register()).await?;
-            let name: &'static str = v.into();
-            log::warn!("Loaded global slash command: {name}")
-        }
-        Ok(())
+    pub fn new(db_conn: DatabaseConnection) -> Self {
+        let mut registry = CommandRegistry::new();
+        registry.add("newuser", Box::new(NewUserCmd::new(db_conn.clone())));
+        registry.add("ping", Box::new(PingCmd {}));
+
+        Self { registry }
     }
+    // pub async fn _register_global_commands(&self, ctx: Context) -> ErrorResult {
+    //     for (name, cmd) in &self.registry.0 {
+    //         Command::create_global_command(&ctx.http, cmd.register(name)).await?;
+    //         log::warn!("loaded global slash command: {name}")
+    //     }
+    //     Ok(())
+    // }
 
     pub async fn register_guild_commands(&self, ctx: Context, guild_id: GuildId) -> ErrorResult {
+        let registry = &self.registry.0;
         guild_id
             .set_commands(
                 &ctx.http,
-                CommandStore::iter().map(|x| x.register()).collect(),
+                registry
+                    .iter()
+                    .map(|(name, cmd)| cmd.register(&name))
+                    .collect(),
             )
             .await?;
-        for command in CommandStore::iter() {
-            let name: &'static str = command.into();
+        for name in registry.keys() {
             log::warn!("loaded guild ({guild_id}) slash command: {name}");
         }
         Ok(())
@@ -39,7 +47,9 @@ impl CommandHandler {
         ctx: Context,
         command_interaction: CommandInteraction,
     ) -> ErrorResult {
-        let Ok(content) = CommandStore::from_str(&command_interaction.data.name) else {
+        let registry = &self.registry.0;
+
+        let Some(content) = registry.get(&command_interaction.data.name) else {
             return Ok(());
         };
         let data = CreateInteractionResponseMessage::new();

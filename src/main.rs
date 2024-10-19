@@ -1,15 +1,16 @@
 #![feature(type_alias_impl_trait)]
-
 mod bot;
+mod database;
 mod util;
-use bot::{database::DatabaseHandler, BotHandler};
+use bot::BotHandler;
+use database::{repository::UserRepository, DatabaseHandler};
 use util::logger;
-pub use tokio::fs as tfs;
 
 #[tokio::main]
 async fn main() -> util::ErrorResult {
+    let db = DatabaseHandler::new(Option::None)?;
+    UserRepository::init(&db.get_connection()).await?;
     logger::init()?;
-    let _ = DatabaseHandler::get_connection().await;
-    BotHandler.run().await?;
+    BotHandler::new(db.get_connection()).run().await?;
     Ok(())
 }

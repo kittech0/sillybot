@@ -13,10 +13,13 @@ serenity = { version = "0.12.2", features = ["gateway"] }
 thiserror = "1.0.64"
 tokio = { version = "1.40.0", features = ["full"] }
 simplelog = "0.12.2"
-strum = { version = "0.26.3", features = ["derive", "strum_macros"] }
 tabled = "0.16.0"
 
 [profile.release]
 strip = true
 opt-level = 3
 lto = true
+
+[unstable]
+mtime-on-use = true
+build-std = ["core", "alloc", "std", "proc_macro"]

@@ -1,6 +1,13 @@
-pub mod handler;
-pub mod commands;
-pub mod database;
+use std::{any, collections::HashMap};
 
-pub struct BotHandler;
-pub struct CommandHandler;
+use commands::CommandRegistry;
+
+pub mod commands;
+pub mod handler;
+
+pub struct BotHandler {
+    cmd_handler: CommandHandler,
+}
+pub struct CommandHandler {
+    registry: CommandRegistry,
+}

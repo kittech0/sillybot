@@ -1,117 +1,109 @@
 use chrono::NaiveDateTime;
-use serenity::all::{
-    Colour, CommandOptionType, Context, CreateCommand, CreateCommandOption, CreateEmbed,
-    CreateInteractionResponseMessage, ResolvedOption, ResolvedValue,
+use serenity::{
+    all::{
+        Colour, CommandOptionType, Context, CreateCommand, CreateCommandOption, CreateEmbed,
+        CreateInteractionResponseMessage, ResolvedOption, ResolvedValue, User, UserId,
+    },
+    async_trait,
 };
 use tabled::Table;
 
-use crate::bot::database::{data, UserRepository};
+use crate::{
+    database::{data, repository::UserRepository, DatabaseConnection}, util::funcs
+};
 
-pub fn register(name: &str) -> CreateCommand {
-    CreateCommand::new(name)
-        .description("A new user command")
-        .add_option(
-            CreateCommandOption::new(
-                CommandOptionType::SubCommand,
-                "replace",
-                "Insert or replace user",
+use super::{Command, NewUserCmd};
+
+#[async_trait]
+impl Command for NewUserCmd {
+    fn register(&self, name: &str) -> CreateCommand {
+        CreateCommand::new(name)
+            .description("A new user command")
+            .add_option(
+                CreateCommandOption::new(
+                    CommandOptionType::SubCommand,
+                    "replace",
+                    "Insert or replace user",
+                )
+                .add_sub_option(CreateCommandOption::new(
+                    CommandOptionType::User,
+                    "user",
+                    "users",
+                )),
             )
-            .add_sub_option(CreateCommandOption::new(
-                CommandOptionType::User,
-                "user",
-                "users",
-            )),
-        )
-        .add_option(CreateCommandOption::new(
-            CommandOptionType::SubCommand,
-            "list",
-            "List all users",
-        ))
-}
-pub async fn run(
-    ctx: &Context,
-    options: &[ResolvedOption<'_>],
-    cirm: CreateInteractionResponseMessage,
-) -> CreateInteractionResponseMessage {
-    let cirm = cirm.ephemeral(true);
-    match options.first() {
-        Some(ResolvedOption {
-            value: ResolvedValue::SubCommand(options),
-            name: "replace",
-            ..
-        }) => replace(ctx, options, cirm).await,
-        Some(ResolvedOption {
-            value: ResolvedValue::SubCommand(options),
-            name: "list",
-            ..
-        }) => list(ctx, options, cirm).await,
-        _ => error_msg(cirm, "Specify subcommand"),
+            .add_option(CreateCommandOption::new(
+                CommandOptionType::SubCommand,
+                "list",
+                "List all users",
+            ))
+    }
+    async fn run(
+        &self,
+        ctx: &Context,
+        options: &[ResolvedOption<'_>],
+        cirm: CreateInteractionResponseMessage,
+    ) -> CreateInteractionResponseMessage {
+        let cirm = cirm.ephemeral(true);
+        match options.first() {
+            Some(ResolvedOption {
+                value: ResolvedValue::SubCommand(options),
+                name: "replace",
+                ..
+            }) => self.replace(ctx, options, cirm).await,
+            Some(ResolvedOption {
+                value: ResolvedValue::SubCommand(options),
+                name: "list",
+                ..
+            }) => self.list(ctx, options, cirm).await,
+            _ => funcs::error_msg(cirm, "Specify subcommand"),
+        }
     }
 }
 
-pub async fn replace(
-    _ctx: &Context,
-    options: &[ResolvedOption<'_>],
-    cirm: CreateInteractionResponseMessage,
-) -> CreateInteractionResponseMessage {
-    let Some(ResolvedOption {
-        value: ResolvedValue::User(user, Some(member)),
-        ..
-    }) = options.first()
-    else {
-        return error_msg(cirm, "Specify user");
-    };
-    let Some(joined_at) = member.joined_at else {
-        return error_msg(cirm, "Unknown join date");
-    };
-
-    let join_date = NaiveDateTime::new(joined_at.date_naive(), joined_at.time());
-    let repository = UserRepository::new().await;
-    let user_data = data::User::new(user.id.get(), join_date);
-
-    if let Err(error) = repository.replace(user_data).await {
-        log::error!("error: {error:?}");
-        error_msg(cirm, "SQL error")
-    } else {
-        completed_msg(cirm, format!("Insert or replace user: {}", user.name))
+impl NewUserCmd {
+    pub fn new(db_conn: DatabaseConnection) -> Self {
+        Self { db_conn }
     }
-}
+    async fn replace(
+        &self,
+        _ctx: &Context,
+        options: &[ResolvedOption<'_>],
+        cirm: CreateInteractionResponseMessage,
+    ) -> CreateInteractionResponseMessage {
+        let Some(ResolvedOption {
+            value: ResolvedValue::User(user, Some(member)),
+            ..
+        }) = options.first()
+        else {
+            return funcs::error_msg(cirm, "Specify user");
+        };
+        let Some(joined_at) = member.joined_at else {
+            return funcs::error_msg(cirm, "Unknown join date");
+        };
+        let repository = UserRepository::new(self.db_conn.clone());
+        let user_data = data::User::new(user.id.into(), joined_at.into());
 
-pub async fn list(
-    _ctx: &Context,
-    _options: &[ResolvedOption<'_>],
-    cirm: CreateInteractionResponseMessage,
-) -> CreateInteractionResponseMessage {
-    let repository = UserRepository::new().await;
-    let users = repository.get_all().await;
+        if let Err(error) = repository.replace(user_data).await {
+            log::error!("error: {error:?}");
+            funcs::error_msg(cirm, "SQL error")
+        } else {
+            funcs::completed_msg(cirm, format!("Insert or replace user: {}", user.name))
+        }
+    }
 
-    let Ok(users) = users else {
-        log::error!("error: {:?}", users);
-        return error_msg(cirm, "SQL Error");
-    };
-    cirm.content(format!("```\n{}\n```", Table::new(&users)))
-}
+    async fn list(
+        &self,
+        _ctx: &Context,
+        _options: &[ResolvedOption<'_>],
+        cirm: CreateInteractionResponseMessage,
+    ) -> CreateInteractionResponseMessage {
+        let repository = UserRepository::new(self.db_conn.clone());
+        let users = repository.get_all().await;
 
-fn error_msg(
-    cirm: CreateInteractionResponseMessage,
-    msg: impl Into<String>,
-) -> CreateInteractionResponseMessage {
-    cirm.embed(
-        CreateEmbed::new()
-            .color(Colour::ROSEWATER)
-            .title("Error")
-            .description(msg),
-    )
-}
-
-fn completed_msg(
-    cirm: CreateInteractionResponseMessage,
-    msg: impl Into<String>,
-) -> CreateInteractionResponseMessage {
-    cirm.embed(
-        CreateEmbed::new()
-            .color(Colour::BLURPLE)
-            .title("Completed")
-            .description(msg),
-    )
+        let Ok(users) = users else {
+            log::error!("error: {:?}", users);
+            return funcs::error_msg(cirm, "SQL Error");
+        };
+        cirm.content(format!("```\n{}\n```", Table::new(&users)))
+    }
 }
