@@ -1,18 +1,11 @@
 use serenity::{
-    all::{
-        Context, CreateInteractionResponseMessage, EventHandler, GatewayIntents, GuildId,
-        Interaction, Message, Ready,
-    },
+    all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Message, Ready},
     async_trait, Client,
 };
 
 use crate::{
     bot::CommandHandler,
-    database::{
-        data::{Date, MessageData},
-        repository::MessagesRepository,
-        DatabaseConnection,
-    },
+    database::{data::MessageData, repository::MessagesRepository, DatabaseConnection},
     util::{funcs, Error, ErrorResult},
 };
 
@@ -63,11 +56,13 @@ impl EventHandler for BotHandler {
         }
     }
 
-    async fn message(&self, ctx: Context, message: Message) {
+    async fn message(&self, _ctx: Context, message: Message) {
         if message.author.bot && message.content.is_empty() {
             return;
         }
-        let Some(member) = message.member else { return };
+        let Some(_member) = message.member else {
+            return;
+        };
 
         let message_id = message.id.get();
         let owner_id = message.author.id;
