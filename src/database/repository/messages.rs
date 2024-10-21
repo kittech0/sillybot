@@ -48,7 +48,7 @@ impl MessagesRepository {
         Ok(())
     }
 
-        pub async fn get_all(&self) -> ErrorResult<Vec<data::MessageData>> {
+    pub async fn get_all(&self) -> ErrorResult<Vec<data::MessageData>> {
         let conn = self.db_conn.0.lock().await;
         let mut stmt = conn.prepare("SELECT message_id, owner_id, message_content, creation_date FROM Messages")?;
         let user_iter = stmt.query_map([], |r| data::MessageData::try_from(r))?;
