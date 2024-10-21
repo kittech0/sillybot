@@ -1,11 +1,18 @@
 use serenity::{
-    all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Ready},
+    all::{
+        Context, CreateInteractionResponseMessage, EventHandler, GatewayIntents, GuildId,
+        Interaction, Message, Ready,
+    },
     async_trait, Client,
 };
 
 use crate::{
     bot::CommandHandler,
-    database::DatabaseConnection,
+    database::{
+        data::{Date, MessageData},
+        repository::MessagesRepository,
+        DatabaseConnection,
+    },
     util::{funcs, Error, ErrorResult},
 };
 
@@ -14,6 +21,7 @@ use super::BotHandler;
 impl BotHandler {
     pub fn new(db_conn: DatabaseConnection) -> Self {
         Self {
+            db_conn: db_conn.clone(),
             cmd_handler: CommandHandler::new(db_conn),
         }
     }
@@ -45,8 +53,36 @@ impl EventHandler for BotHandler {
         let Interaction::Command(command_interaction) = interaction else {
             return;
         };
-        if let Err(error) = self.cmd_handler.run_command(ctx, command_interaction).await {
+        if let Some(error) = self
+            .cmd_handler
+            .run_command(ctx, command_interaction)
+            .await
+            .err()
+        {
             funcs::throw("unable to run command", error);
+        }
+    }
+
+    async fn message(&self, ctx: Context, message: Message) {
+        if message.author.bot && message.content.is_empty() {
+            return;
+        }
+        let Some(member) = message.member else { return };
+
+        let message_id = message.id.get();
+        let owner_id = message.author.id;
+        let message_content = message.content;
+        let creation_date = message.timestamp;
+
+        let message_data = MessageData::new(
+            message_id.into(),
+            owner_id.into(),
+            message_content.into(),
+            creation_date.into(),
+        );
+        let repository = MessagesRepository::new(self.db_conn.clone());
+        if let Err(error) = repository.replace(message_data).await {
+            log::error!("sql error: {error:?}")
         }
     }
 }

@@ -5,13 +5,17 @@ use serenity::all::{
 
 use crate::{bot::CommandHandler, database::DatabaseConnection, util::ErrorResult};
 
-use super::{CommandRegistry, NewUserCmd, PingCmd};
+use super::{CommandRegistry, MessagesCmd, NewUserCmd, PingCmd};
 
 impl CommandHandler {
     pub fn new(db_conn: DatabaseConnection) -> Self {
         let registry = CommandRegistry::new([
             ("newuser".into(), Box::new(NewUserCmd::new(db_conn.clone()))),
             ("ping".into(), Box::new(PingCmd {})),
+            (
+                "messages".into(),
+                Box::new(MessagesCmd::new(db_conn.clone())),
+            ),
         ]);
         Self { registry }
     }

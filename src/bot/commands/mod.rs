@@ -8,6 +8,7 @@ use serenity::{
 use crate::database::DatabaseConnection;
 
 pub mod handler;
+pub mod messages;
 pub mod newuser;
 pub mod ping;
 pub mod registry;
@@ -27,6 +28,10 @@ pub trait Command: Send + Sync {
 }
 
 pub struct NewUserCmd {
+    db_conn: DatabaseConnection,
+}
+
+pub struct MessagesCmd {
     db_conn: DatabaseConnection,
 }
 

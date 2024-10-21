@@ -1,57 +1,61 @@
 use std::{fmt::Display, str::FromStr};
 
-use super::{DiscordId, JoinDate, SqlData, User};
+use super::{Date, DiscordId, SqlData, UserData};
 use chrono::{NaiveDateTime, ParseError};
 use rusqlite::Row;
-use serenity::all::{Timestamp, UserId};
+use serenity::all::{MessageId, Timestamp, UserId};
 
-impl User {
-    pub fn new(discord_id: DiscordId, join_date: JoinDate) -> Self {
+impl UserData {
+    pub fn new(discord_id: DiscordId, join_date: Date) -> Self {
         Self {
             discord_id,
             join_date,
         }
     }
 }
+impl TryFrom<&Row<'_>> for UserData {
+    type Error = rusqlite::Error;
 
+    fn try_from(row: &Row<'_>) -> Result<Self, Self::Error> {
+        let discord_id: u64 = row.get(0)?;
+        let join_date = row.get_ref(1)?.as_str()?;
+        Ok(Self {
+            discord_id: discord_id.into(),
+            join_date: join_date.parse().unwrap(),
+        })
+    }
+}
 impl SqlData for DiscordId {
     fn get_sql_type() -> impl AsRef<str> {
-        "BIGINT UNSIGNED UNIQUE NOT NULL"
+        "INTEGER NOT NULL"
     }
 }
 
-impl SqlData for JoinDate {
+impl SqlData for Date {
     fn get_sql_type() -> impl AsRef<str> {
-        "DATETIME NOT NULL"
+        "TEXT NOT NULL"
     }
 }
 
 impl From<UserId> for DiscordId {
     fn from(value: UserId) -> Self {
-        DiscordId(value.get())
+        Self(value.get())
     }
 }
 
-impl TryFrom<&Row<'_>> for User {
-    type Error = rusqlite::Error;
-
-    fn try_from(row: &Row<'_>) -> Result<Self, Self::Error> {
-        let string = row.get_ref(1)?.as_str()?;
-        let id: u64 = row.get(0)?;
-        Ok(Self {
-            discord_id: id.into(),
-            join_date: string.parse().unwrap(),
-        })
+impl From<MessageId> for DiscordId {
+    fn from(value: MessageId) -> Self {
+        Self(value.get())
     }
 }
 
-impl From<NaiveDateTime> for JoinDate {
+impl From<NaiveDateTime> for Date {
     fn from(value: NaiveDateTime) -> Self {
         Self(value)
     }
 }
 
-impl From<Timestamp> for JoinDate {
+impl From<Timestamp> for Date {
     fn from(value: Timestamp) -> Self {
         Self(NaiveDateTime::new(value.date_naive(), value.time()))
     }
@@ -64,7 +68,7 @@ impl Display for DiscordId {
     }
 }
 
-impl Display for JoinDate {
+impl Display for Date {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.0.format("%Y-%m-%d %H:%M:%S"))?;
         Ok(())
@@ -77,7 +81,7 @@ impl From<u64> for DiscordId {
     }
 }
 
-impl FromStr for JoinDate {
+impl FromStr for Date {
     type Err = ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {

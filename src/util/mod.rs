@@ -18,4 +18,3 @@ pub enum Error {
     #[error("undefined token")]
     UndefinedToken,
 }
-
