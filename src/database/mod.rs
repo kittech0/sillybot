@@ -1,5 +1,5 @@
-pub mod data;
 pub mod connection;
+pub mod data;
 pub mod repository;
 use rusqlite::Connection;
 use std::sync::Arc;
