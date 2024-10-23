@@ -25,7 +25,7 @@ impl MessagesCmd {
         _options: &[ResolvedOption<'_>],
         cirm: CreateInteractionResponseMessage,
     ) -> CreateInteractionResponseMessage {
-        let repository = MessagesRepository::new(self.db_conn.clone());
+        let repository = MessagesRepository::get(self.db_conn.clone());
         let messages = repository.get_all().await;
 
         let Ok(messages) = messages else {

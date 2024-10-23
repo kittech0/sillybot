@@ -11,7 +11,7 @@ use crate::{
 use super::UserRepository;
 
 impl UserRepository {
-    pub fn new(db_conn: DatabaseConnection) -> Self {
+    pub fn get(db_conn: DatabaseConnection) -> Self {
         Self { db_conn }
     }
 
@@ -20,7 +20,7 @@ impl UserRepository {
             &format!(
                 "CREATE TABLE IF NOT EXISTS Users (
                     user_id {} UNIQUE,
-                    join_date  {}
+                    join_date {}
                 ) STRICT",
                 data::DiscordId::get_sql_type().as_ref(),
                 data::Date::get_sql_type().as_ref()

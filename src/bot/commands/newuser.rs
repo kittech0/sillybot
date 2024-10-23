@@ -33,7 +33,7 @@ impl NewUserCmd {
         let Some(joined_at) = member.joined_at else {
             return funcs::error_msg(cirm, "Unknown join date");
         };
-        let repository = UserRepository::new(self.db_conn.clone());
+        let repository = UserRepository::get(self.db_conn.clone());
         let user_data = data::UserData::new(user.id.into(), joined_at.into());
 
         if let Err(error) = repository.replace(user_data).await {
@@ -50,7 +50,7 @@ impl NewUserCmd {
         _options: &[ResolvedOption<'_>],
         cirm: CreateInteractionResponseMessage,
     ) -> CreateInteractionResponseMessage {
-        let repository = UserRepository::new(self.db_conn.clone());
+        let repository = UserRepository::get(self.db_conn.clone());
         let users = repository.get_all().await;
 
         let Ok(users) = users else {

@@ -13,6 +13,7 @@ impl UserData {
         }
     }
 }
+
 impl TryFrom<&Row<'_>> for UserData {
     type Error = rusqlite::Error;
 

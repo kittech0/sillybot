@@ -11,7 +11,7 @@ use crate::{
 use super::MessagesRepository;
 
 impl MessagesRepository {
-    pub fn new(db_conn: DatabaseConnection) -> Self {
+    pub fn get(db_conn: DatabaseConnection) -> Self {
         Self { db_conn }
     }
     pub async fn init(db_conn: DatabaseConnection) -> ErrorResult {

@@ -16,9 +16,3 @@ impl DatabaseConnection {
         Ok(Self(Arc::new(Mutex::new(connection))))
     }
 }
-
-impl Clone for DatabaseConnection {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
-    }
-}
