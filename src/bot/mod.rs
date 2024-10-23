@@ -1,5 +1,5 @@
 use commands::CommandRegistry;
-use serenity::all::{Guild, GuildId};
+use serenity::all::GuildId;
 
 use crate::database::DatabaseConnection;
 

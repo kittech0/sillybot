@@ -5,7 +5,7 @@ use serenity::{
 
 use crate::{
     bot::CommandHandler,
-    database::{data::MessageData, repository::MessagesRepository, DatabaseConnection},
+    database::DatabaseConnection,
     util::{funcs, Error, ErrorResult},
 };
 
