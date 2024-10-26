@@ -31,8 +31,8 @@ impl TryFrom<&Row<'_>> for MessageData {
     fn try_from(row: &Row<'_>) -> Result<Self, Self::Error> {
         let message_id: u64 = row.get(0)?;
         let owner_id: u64 = row.get(1)?;
-        let message_content = row.get_ref(2)?.as_str()?;
-        let creation_date = row.get_ref(3)?.as_str()?;
+        let message_content: String = row.get(2)?;
+        let creation_date: String = row.get(3)?;
 
         Ok(Self {
             message_id: message_id.into(),

@@ -19,7 +19,7 @@ impl TryFrom<&Row<'_>> for UserData {
 
     fn try_from(row: &Row<'_>) -> Result<Self, Self::Error> {
         let discord_id: u64 = row.get(0)?;
-        let join_date = row.get_ref(1)?.as_str()?;
+        let join_date: String = row.get(1)?;
         Ok(Self {
             discord_id: discord_id.into(),
             join_date: join_date.parse().unwrap(),

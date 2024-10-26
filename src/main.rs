@@ -4,7 +4,7 @@ mod database;
 mod util;
 use bot::BotHandler;
 use database::{
-    repository::{MessagesRepository, UserRepository},
+    repository::{MessageRepository, UserRepository},
     DatabaseConnection,
 };
 use util::logger;
@@ -15,7 +15,7 @@ async fn main() -> util::ErrorResult {
 
     let db = DatabaseConnection::new(Option::None)?;
     UserRepository::init(db.clone()).await?;
-    MessagesRepository::init(db.clone()).await?;
+    MessageRepository::init(db.clone()).await?;
     BotHandler::new(db).run().await?;
     Ok(())
 }

@@ -10,6 +10,7 @@ use crate::database::DatabaseConnection;
 pub mod handler;
 pub mod messages;
 pub mod newuser;
+pub mod permission;
 pub mod ping;
 pub mod registry;
 
@@ -34,5 +35,10 @@ pub struct NewUserCmd {
 pub struct MessagesCmd {
     db_conn: DatabaseConnection,
 }
+
+pub struct PermissionCmd {
+    db_conn: DatabaseConnection,
+}
+
 
 pub struct PingCmd {}

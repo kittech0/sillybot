@@ -26,6 +26,11 @@ impl Command for PingCmd {
                         CommandOptionType::SubCommand,
                         "lol2",
                         "silly",
+                    ))
+                    .add_sub_option(CreateCommandOption::new(
+                        CommandOptionType::SubCommand,
+                        "lol4",
+                        "silly",
                     )),
             )
             .description("A ping command")

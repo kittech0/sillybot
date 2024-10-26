@@ -8,7 +8,7 @@ use serenity::{
 use tabled::Table;
 
 use crate::{
-    database::{repository::MessagesRepository, DatabaseConnection},
+    database::{repository::MessageRepository, DatabaseConnection},
     util::funcs,
 };
 
@@ -25,7 +25,7 @@ impl MessagesCmd {
         _options: &[ResolvedOption<'_>],
         cirm: CreateInteractionResponseMessage,
     ) -> CreateInteractionResponseMessage {
-        let repository = MessagesRepository::get(self.db_conn.clone());
+        let repository = MessageRepository::get(self.db_conn.clone());
         let messages = repository.get_all().await;
 
         let Ok(messages) = messages else {

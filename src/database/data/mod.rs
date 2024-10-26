@@ -1,7 +1,9 @@
 use chrono::NaiveDateTime;
 use tabled::Tabled;
 
-pub mod messages;
+pub mod command;
+pub mod message;
+pub mod permission;
 pub mod user;
 
 #[derive(Debug, Tabled)]
@@ -16,6 +18,26 @@ pub struct MessageData {
     pub message_content: MessageContent,
     pub creation_date: Date,
 }
+#[derive(Debug, Tabled)]
+pub struct CommandData {
+    pub row_id: usize,
+    pub name: String,
+}
+
+#[derive(Debug, Tabled)]
+pub struct PermissionData {
+    pub name: String,
+    pub default_value: PermissionValue,
+}
+
+#[derive(Debug, Tabled)]
+pub enum PermissionValue {
+    Allow,
+    Disallow,
+}
+
+#[derive(Debug, Tabled)]
+pub struct PermissionName(String);
 
 #[derive(Debug, Tabled)]
 pub struct MessageContent(String);

@@ -1,7 +1,7 @@
 use serenity::all::{Context, Interaction, Message, Ready};
 
 use crate::{
-    database::{data::MessageData, repository::MessagesRepository},
+    database::{data::MessageData, repository::MessageRepository},
     util::funcs,
 };
 
@@ -55,7 +55,7 @@ pub async fn on_message(bot_handler: &BotHandler, _ctx: Context, message: Messag
         message_content.into(),
         creation_date.into(),
     );
-    let repository = MessagesRepository::get(bot_handler.db_conn.clone());
+    let repository = MessageRepository::get(bot_handler.db_conn.clone());
     if let Err(error) = repository.replace(message_data).await {
         log::error!("sql error: {error:?}")
     }
