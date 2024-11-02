@@ -24,17 +24,14 @@ impl NewUserCmd {
         cirm: CreateInteractionResponseMessage,
     ) -> CreateInteractionResponseMessage {
         let Some(ResolvedOption {
-            value: ResolvedValue::User(user, Some(member)),
+            value: ResolvedValue::User(user, Some(_member)),
             ..
         }) = options.first()
         else {
             return funcs::error_msg(cirm, "Specify user");
         };
-        let Some(joined_at) = member.joined_at else {
-            return funcs::error_msg(cirm, "Unknown join date");
-        };
         let repository = UserRepository::get(self.db_conn.clone());
-        let user_data = data::UserData::new(user.id.into(), joined_at.into());
+        let user_data = data::UserData::new(user.id.into());
 
         if let Err(error) = repository.replace(user_data).await {
             log::error!("error: {error:?}");

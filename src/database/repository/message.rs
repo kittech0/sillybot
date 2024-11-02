@@ -31,7 +31,6 @@ impl MessageRepository {
             ),
             (),
         )?;
-        log::warn!("loading messages repository");
         Ok(())
     }
     pub async fn replace(&self, message: data::MessageData) -> ErrorResult {

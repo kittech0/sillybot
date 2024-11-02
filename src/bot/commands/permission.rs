@@ -1,4 +1,3 @@
-use serde::de::value;
 use serenity::{
     all::{
         CommandOptionType, Context, CreateCommand, CreateCommandOption,
@@ -10,14 +9,14 @@ use tabled::Table;
 
 use crate::{
     database::{
-        data,
-        repository::{PermissionRepository, UserRepository},
+        data::{self, ControlAccess},
+        repository::PermissionRepository,
         DatabaseConnection,
     },
     util::funcs,
 };
 
-use super::{Command, NewUserCmd, PermissionCmd};
+use super::{Command, PermissionCmd};
 impl PermissionCmd {
     pub fn new(db_conn: DatabaseConnection) -> Self {
         Self { db_conn }
@@ -35,23 +34,27 @@ impl PermissionCmd {
         else {
             return funcs::error_msg(cirm, "Specify permission name");
         };
-        log::warn!("test: {name}");
-        match options.get(1) {
-            Some(ResolvedOption {
-                value: ResolvedValue::String(test),
-                ..
-            }) => cirm.content(format!("test {test}")),
-            _ => cirm.content("none"),
-        }
-        // let repository = UserRepository::get(self.db_conn.clone());
-        // let user_data = data::UserData::new(user.id.into(), joined_at.into());
+        let Some(ResolvedOption {
+            value: ResolvedValue::String(access),
+            ..
+        }) = options.get(1)
+        else {
+            return funcs::error_msg(cirm, "Specify access");
+        };
+        let access_a = match *access {
+            "deny" => ControlAccess::Disallow,
+            "allow" => ControlAccess::Allow,
+            _ => return funcs::error_msg(cirm, "Specify access"),
+        };
+        let repository = PermissionRepository::get(self.db_conn.clone());
+        let user_data = data::PermissionData::new(*name, access_a);
 
-        // if let Err(error) = repository.replace(user_data).await {
-        //     log::error!("error: {error:?}");
-        //     funcs::error_msg(cirm, "SQL error")
-        // } else {
-        //     funcs::completed_msg(cirm, format!("Insert or replace user: {}", user.name))
-        // }
+        if let Err(error) = repository.replace(user_data).await {
+            log::error!("error: {error:?}");
+            funcs::error_msg(cirm, "SQL error")
+        } else {
+            funcs::completed_msg(cirm, format!("Insert or replace permission: {}", *name))
+        }
     }
 
     async fn list(

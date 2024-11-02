@@ -5,8 +5,12 @@ use serenity::all::{Context, CreateInteractionResponseMessage, ResolvedOption};
 use super::{Command, CommandRegistry};
 
 impl CommandRegistry {
-    pub fn new<const T: usize>(values: [(String, Box<dyn Command>); T]) -> Self {
-        Self(HashMap::from(values))
+    pub fn new() -> Self {
+        Self(HashMap::new())
+    }
+
+    pub fn register(&mut self, name: impl Into<String>, cmd: impl Command + 'static) {
+        self.0.insert(name.into(), Box::new(cmd));
     }
     pub async fn run(
         &self,

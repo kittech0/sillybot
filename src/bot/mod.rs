@@ -8,10 +8,13 @@ mod events;
 pub mod handler;
 
 pub struct BotHandler {
-    db_conn: DatabaseConnection,
-    cmd_handler: CommandHandler,
-    guild_id: GuildId,
+    event_manager: EventManager,
 }
 pub struct CommandHandler {
-    registry: CommandRegistry,
+    command_registry: CommandRegistry,
+}
+
+pub struct EventManager {
+    db_conn: DatabaseConnection,
+    cmd_handler: CommandHandler,
 }

@@ -51,7 +51,6 @@ impl<T: Into<String>> From<T> for MessageContent {
 
 impl Display for MessageContent {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)?;
-        Ok(())
+        write!(f, "{}", self.0)
     }
 }

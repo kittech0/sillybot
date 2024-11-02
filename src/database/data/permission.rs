@@ -1,13 +1,13 @@
-use std::fmt::{write, Display};
+use std::fmt::Display;
 
 use rusqlite::Row;
 
-use super::{PermissionData, PermissionName, PermissionValue, SqlData};
+use super::{ControlAccess, Identifier, PermissionData, SqlData};
 
 impl PermissionData {
-    pub fn new(name: String, default_value: PermissionValue) -> Self {
+    pub fn new(name: impl Into<String>, default_value: ControlAccess) -> Self {
         Self {
-            name,
+            name: Identifier(name.into()),
             default_value,
         }
     }
@@ -21,41 +21,35 @@ impl TryFrom<&Row<'_>> for PermissionData {
         let default_value: bool = row.get(1)?;
 
         Ok(Self {
-            name,
+            name: Identifier(name),
             default_value: default_value.into(),
         })
     }
 }
 
-impl From<bool> for PermissionValue {
+impl From<bool> for ControlAccess {
     fn from(value: bool) -> Self {
         match value {
-            true => PermissionValue::Allow,
-            false => PermissionValue::Disallow,
+            true => ControlAccess::Allow,
+            false => ControlAccess::Disallow,
         }
     }
 }
 
-impl Display for PermissionValue {
+impl Display for ControlAccess {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
             "{}",
             match self {
-                PermissionValue::Allow => 1,
-                PermissionValue::Disallow => 0,
+                ControlAccess::Allow => "allow",
+                ControlAccess::Disallow => "disallow",
             },
         )
     }
 }
 
-impl SqlData for PermissionName {
-    fn get_sql_type() -> impl AsRef<str> {
-        "TEXT NOT NULL"
-    }
-}
-
-impl SqlData for PermissionValue {
+impl SqlData for ControlAccess {
     fn get_sql_type() -> impl AsRef<str> {
         "INT NOT NULL"
     }

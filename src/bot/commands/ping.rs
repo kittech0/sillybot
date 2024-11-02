@@ -8,6 +8,12 @@ use serenity::{
 
 use super::{Command, PingCmd};
 
+impl PingCmd {
+    pub fn new() -> Self {
+        Self {}
+    }
+}
+
 #[async_trait]
 impl Command for PingCmd {
     fn register(&self, name: &str) -> CreateCommand {

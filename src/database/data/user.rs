@@ -6,10 +6,9 @@ use rusqlite::Row;
 use serenity::all::{MessageId, Timestamp, UserId};
 
 impl UserData {
-    pub fn new(discord_id: DiscordId, join_date: Date) -> Self {
+    pub fn new(discord_id: DiscordId) -> Self {
         Self {
             discord_id,
-            join_date,
         }
     }
 }
@@ -19,10 +18,8 @@ impl TryFrom<&Row<'_>> for UserData {
 
     fn try_from(row: &Row<'_>) -> Result<Self, Self::Error> {
         let discord_id: u64 = row.get(0)?;
-        let join_date: String = row.get(1)?;
         Ok(Self {
             discord_id: discord_id.into(),
-            join_date: join_date.parse().unwrap(),
         })
     }
 }
@@ -50,12 +47,6 @@ impl From<MessageId> for DiscordId {
     }
 }
 
-impl From<NaiveDateTime> for Date {
-    fn from(value: NaiveDateTime) -> Self {
-        Self(value)
-    }
-}
-
 impl From<Timestamp> for Date {
     fn from(value: Timestamp) -> Self {
         Self(NaiveDateTime::new(value.date_naive(), value.time()))
@@ -64,15 +55,13 @@ impl From<Timestamp> for Date {
 
 impl Display for DiscordId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)?;
-        Ok(())
+        write!(f, "{}", self.0)
     }
 }
 
 impl Display for Date {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0.format("%Y-%m-%d %H:%M:%S"))?;
-        Ok(())
+        write!(f, "{}", self.0.format("%Y-%m-%d %H:%M:%S"))
     }
 }
 
@@ -86,6 +75,6 @@ impl FromStr for Date {
     type Err = ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(NaiveDateTime::parse_from_str(s, "%Y-%m-%d %H:%M:%S")?.into())
+        Ok(Self(NaiveDateTime::parse_from_str(s, "%Y-%m-%d %H:%M:%S")?))
     }
 }
