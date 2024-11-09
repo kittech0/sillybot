@@ -3,9 +3,9 @@ use serenity::all::{
     GuildId,
 };
 
-use crate::{bot::CommandHandler, database::DatabaseConnection, util::ErrorResult};
+use crate::{bot::CommandHandler, util::ErrorResult};
 
-use super::{CommandRegistry, MessagesCmd, NewUserCmd, PermissionCmd, PingCmd};
+use super::CommandRegistry;
 
 impl CommandHandler {
     pub fn new(command_registry: CommandRegistry) -> Self {

@@ -3,7 +3,7 @@ pub mod logger;
 
 const _TESTING: bool = true;
 
-pub type ErrorResult<T = ()> = std::result::Result<T, Error>;
+pub type ErrorResult<T = ()> = Result<T, Error>;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
@@ -15,6 +15,6 @@ pub enum Error {
     Serenity(#[from] serenity::Error),
     #[error("logger creation error")]
     LoggerCreate(#[from] log::SetLoggerError),
-    #[error("undefined token")]
+    #[error("undefined token, please set token in `token` file")]
     UndefinedToken,
 }

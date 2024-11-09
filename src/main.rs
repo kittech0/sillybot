@@ -18,7 +18,7 @@ const GUILD_ID: u64 = 1285696315640123553;
 async fn main() -> util::ErrorResult {
     logger::init()?;
 
-    let db_conn = DatabaseConnection::new(Option::None)?;
+    let db_conn = DatabaseConnection::new(None)?;
     UserRepository::init(db_conn.clone()).await?;
     MessageRepository::init(db_conn.clone()).await?;
     PermissionRepository::init(db_conn.clone()).await?;

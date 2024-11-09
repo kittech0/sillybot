@@ -1,21 +1,12 @@
-use serenity::{
-    all::{Context, EventHandler, GatewayIntents, GuildId, Interaction, Message, Ready},
-    async_trait, Client,
-};
+use serenity::{all::GatewayIntents, Client};
 
-use crate::{
-    bot::CommandHandler,
-    database::DatabaseConnection,
-    util::{funcs, Error, ErrorResult},
-};
+use crate::util::{funcs, Error, ErrorResult};
 
-use super::{commands::CommandRegistry, events, BotHandler, EventManager};
+use super::{BotHandler, EventManager};
 
 impl BotHandler {
     pub fn new(event_manager: EventManager) -> Self {
-        Self {
-            event_manager,
-        }
+        Self { event_manager }
     }
 
     pub async fn run(self) -> ErrorResult {
